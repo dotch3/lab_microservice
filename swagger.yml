@@ -127,7 +127,7 @@ paths:
   /otros:
     get:
       x-swagger-router-controller: Resources
-      operationId: usuario.get_all
+      operationId: usuario
       tags:
         - MEU MONGO - USUARIOS GET ALL
       summary: Lista de Usuarios
@@ -152,7 +152,7 @@ paths:
   /items:
     get:
       x-swagger-router-controller: Resources
-      operationId: item.get_all
+      operationId: item
       tags:
         - MEU MONGO - ITEMS GET ALL
       summary: Lista de ITEMS

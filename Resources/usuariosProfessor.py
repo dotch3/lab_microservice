@@ -12,20 +12,10 @@ def get_dict_from_mongodb():
     itens_db = db.clientes.find()
     PEOPLE = {}
     for i in itens_db:
-        print("teste i before")
-        print(i)
         i.pop('_id')  # retira id: criado automaticamente
         item = dict(i)
-        print("teste item sem I")
-        print(item)
-        print("teste item lname")
-        print(item["lname"])
-        print("teste i after REMOVE")
-        print(i)
         # Changing to use the lastName as ID
         PEOPLE[item["lname"]] = (i)
-        print("PEOOPLE")
-        print(PEOPLE)
     return PEOPLE
 
 

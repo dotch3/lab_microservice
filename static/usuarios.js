@@ -86,29 +86,30 @@ ns.model = (function() {
 ns.view = (function() {
   "use strict";
 
-  let $fname = $("#fname"),
-    $lname = $("#lname");
+  let $nome = $("#nome"),
+    $sobrenome = $("#sobrenome"),
+    $email = $("#email");
 
   // return the API
   return {
     reset: function() {
-      $lname.val("");
-      $fname.val("").focus();
+      $nome.val("");
+      $sobrenome.val("").focus();
     },
-    update_editor: function(fname, lname) {
-      $lname.val(lname);
-      $fname.val(fname).focus();
+    update_editor: function(nome, sobrenome) {
+      $nome.val(nome);
+      $sobrenome.val(sobrenome).focus();
     },
-    build_table: function(people) {
+    build_table: function(usuario) {
       let rows = "";
 
       // clear the table
       $(".conteudo table > tbody").empty();
 
-      // did we get a people array?
-      if (people) {
-        for (let i = 0, l = people.length; i < l; i++) {
-          rows += `<tr><td class="fname">${people[i].fname}</td><td class="lname">${people[i].lname}</td><td>${people[i].timestamp}</td></tr>`;
+      // did we get a user array?
+      if (usuario) {
+        for (let i = 0, l = usuario.length; i < l; i++) {
+          rows += `<tr><td class="nome">${usuario[i].nome}</td><td class="sobrenome">${usuario[i].sobrenome}</td><td class="email">${usuario[i].email}</td></tr>`;
         }
         $("table > tbody").append(rows);
       }
@@ -131,8 +132,9 @@ ns.controller = (function(m, v) {
   let model = m,
     view = v,
     $event_pump = $("body"),
-    $fname = $("#fname"),
-    $lname = $("#lname");
+    $nome = $("#nome"),
+    $sobrenome = $("#sobrenome"),
+    $email = $("#email");
 
   // Get the data from the model after the controller is done initializing
   setTimeout(function() {
@@ -140,8 +142,8 @@ ns.controller = (function(m, v) {
   }, 100);
 
   // Validate input
-  function validate(fname, lname) {
-    return fname !== "" && lname !== "";
+  function validate(nome, sobrenome) {
+    return nome !== "" && sobrenome !== "";
   }
 
   // Create our event handlers
@@ -194,20 +196,25 @@ ns.controller = (function(m, v) {
 
   $("table > tbody").on("dblclick", "tr", function(e) {
     let $target = $(e.target),
-      fname,
-      lname;
+      nome,
+      sobrenome;
 
-    fname = $target
+    nome = $target
       .parent()
-      .find("td.fname")
+      .find("td.nome")
       .text();
 
-    lname = $target
+    sobrenome = $target
       .parent()
-      .find("td.lname")
+      .find("td.sobrenome")
       .text();
 
-    view.update_editor(fname, lname);
+    email = $target
+      .parent()
+      .find("td.email")
+      .text();
+
+    view.update_editor(nome, sobrenome, email);
   });
 
   // Handle the model events

@@ -46,8 +46,10 @@ class ConexionMongo:
             # Let's get the value of the _id and use it for item_id
             object_id = i.pop('_id')
             new_id = str(object_id)
+            i["_id"] = new_id
             # Using the Id for the dictionary
             ITEMS[new_id] = i
+        # Return a list
         print(ITEMS)
         print("End of get_dict_from_mongodb ")
         return ITEMS
@@ -64,7 +66,7 @@ class ConexionMongo:
         # In order to jsonify the dictionary, is needed to call it inside the app_context
         app = Flask(__name__)
         if not db_inst:
-            db_inst='local'
+            db_inst = 'local'
         with app.app_context():
 
             ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst, collection)
@@ -72,7 +74,6 @@ class ConexionMongo:
             for key in sorted(ITEMS.keys()):
                 temp = [key, ITEMS[key]]
                 my_dict.append(temp)
-            print(my_dict)
             dict_items = jsonify(my_dict)
             qtd = len(my_dict)
             content_range = "items 0-" + str(qtd) + "/" + str(qtd)

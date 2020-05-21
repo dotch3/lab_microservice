@@ -1,16 +1,20 @@
 # This  will call the Usuario model
-from flask_restful import Resource
-from Model.usuario_model import Usuario
+from Model.usuario_model import UsuarioModel
+from flask_restx import Resource, Api
 
 
-class Users(Resource):
-    def get_all(self):
-        user_obj = Usuario()
-        return user_obj.get_all_items()
+class Usuario(Resource):
+    def get(self, nome):
+        user_obj = UsuarioModel()
+        return user_obj.get_item(nome)
+
+    def post(self):
+        user_obj = UsuarioModel()
+        return user_obj.criar_solicitante(), 201
 
 
-class UsersList(Resource):
-    def get_all_items(self):
-        # Getting all the data from the "usuarios" collection
-        user_obj = Usuario()
+class UsuarioList(Resource):
+
+    def get(self):
+        user_obj = UsuarioModel()
         return user_obj.get_all_items()

@@ -3,36 +3,36 @@ import connexion
 from flask import render_template
 from flask import Flask
 from flask_cors import CORS
-from flask_restful import Resource, Api
+from flask_restx import Api, Resource, fields
 
-from Resources.item import Item
+from Resources.usuario import Usuario, UsuarioList
+from Resources.item import Item, ItemList
+
 
 # Defining the path for the templates
 APP_PATH = os.path.dirname(os.path.abspath(__file__))
 
-# TEMPLATE_PATH = os.path.join(APP_PATH, 'templates/')
-# TEMPLATE_PATH = os.path.join(TEMPLATE_PATH, 'usuarios.html')
-
-# print(APP_PATH)
-# print(TEMPLATE_PATH)
-
 # Creating the conexion with app flask
-app = connexion.App(__name__, specification_dir=APP_PATH)
+# app = connexion.App(__name__, specification_dir=APP_PATH)
 
+# app.add_api('swagger.yml')
+# CORS(app.app,resources=r'/api/*',methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
 
-app.add_api('swagger.yml')
-CORS(app.app, resources=r'/api/*', methods=['GET'])
-
-# Adding more services
-
+# Create a Flask WSGI application
 app_flask = Flask(__name__)
-api = Api(app_flask)
+api = Api(app_flask,
+          version="1.0",
+          title="CRUD operations FIAP SW ENG Lab2",
+          description="Laboratory for microservices",
+          default='Test: uServices SW Eng',
+          default_label='This is the swagger UI for API testing')
+
 # Items
-api.add_resource(Item, '/item/<string:nome>')
-api.add_resource(ItemList, '/items')
+api.add_resource(Item, '/api/item/<string:nome>')
+api.add_resource(ItemList, '/api/items')
 # Users
-api.add_resource(User, '/user/<string:nome>')
-api.add_resource(UserList, '/users')
+api.add_resource(Usuario, '/api/usuario/<string:nome>')
+api.add_resource(UsuarioList, '/api/usuarios')
 # @TODO crear los demas recursos listados
 # Register new Users/Proposta/Publicacao/Negociacao
 
@@ -42,26 +42,30 @@ api.add_resource(UserList, '/users')
 # api.add_resource(UserRegister, '/register')
 
 
-@ app.route('/')
+@ app_flask.route('/home', methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
 def home():
-    # Load the home page
-    return render_template('home.html')
+    return render_template('usuarios.html')
 
 
-@ app.route('/usuarios')
+@ app_flask.route('/api/items')
+def items():
+    return "You said"
+
+
+@ app_flask.route('/api/item/<string:nome>')
+def item_nome():
+    return render_template('items.html')
+
+
+@ app_flask.route('/api/usuarios')
 def usuarios():
     return render_template('usuarios.html')
 
 
-@ app.route('/usuariosMongoLocal')
-def otros():
-    return render_template('usuarios.html')
-
-
-@ app.route('/items')
-def items():
-    return render_template('usuarios.html')
+@ app_flask.route('/api/usuario/<string:nome>')
+def usuario_nome():
+    return render_template('items.html')
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app_flask.run(host='0.0.0.0', port=5000, debug=True)

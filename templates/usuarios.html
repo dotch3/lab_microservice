@@ -14,7 +14,7 @@
       crossorigin="anonymous"
     />
 
-    <title>Clientes App</title>
+    <title>BoaVizinhança uServices</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"
@@ -27,20 +27,96 @@
   </head>
   <body>
     <div class="container">
-      <h1>Home App</h1>
+      <h1>Usuarios</h1>
       <div class="section editor">
-        <label for="fname"
-          >Primeiro Nome <input id="fname" class="form-control" type="text" />
-        </label>
-        <br />
-        <label for="lname"
-          >Ultimo Nome <input id="lname" type="text" class="form-control" />
-        </label>
-        <br />
-        <button id="create" class="btn btn-primary">Create</button>
-        <button id="reset" class="btn btn-info">Read</button>
-        <button id="update" class="btn btn-warning">Update</button>
-        <button id="delete" class="btn btn-danger">Delete</button>
+        <form>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="user_id">UserID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="user_id"
+                placeholder="User ID"
+              />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="username">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                placeholder="username"
+              />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Email"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="nome">Nome</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nome"
+                placeholder="Jorgiex"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="sobrenome">Sobrenome</label>
+              <input
+                type="text"
+                class="form-control"
+                id="sobrenome"
+                placeholder="Mercadiex"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="address">Address</label>
+              <input
+                type="text"
+                class="form-control"
+                id="address"
+                placeholder="Rua Ipanema 1234"
+              />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="celular">Celular</label>
+              <input
+                type="text"
+                class="form-control"
+                id="celular"
+                placeholder="11 973147777"
+              />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="tipo">Tipo de usuario</label>
+              <select id="tipo" class="form-control">
+                <option selected>Choose...</option>
+                <option value="proprietario">Proprietario</option>
+                <option value="solicitante">Solicitante</option>
+              </select>
+            </div>
+          </div>
+          <div class="container form-row col-12">
+            <div class="form-group">
+              <button id="create" class="btn btn-primary">Create</button>
+              <button id="reset" class="btn btn-info">Read</button>
+              <button id="update" class="btn btn-warning">Update</button>
+              <button id="delete" class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+        </form>
       </div>
       <br />
       <blockquote>
@@ -50,9 +126,12 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Primeiro Nome</th>
-              <th>Ultimo Nome</th>
-              <th>Update Time</th>
+              <th>User_Id</th>
+              <th>Nome</th>
+              <th>Sobrenome</th>
+              <th>Tipo Usuario</th>
+              <th>Username</th>
+              <th>Password</th>
             </tr>
           </thead>
           <tbody></tbody>

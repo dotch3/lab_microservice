@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pycache*
+.idea*
+*.pyc
+*.pyo
+.installed.cfg
+
+pip-log.txt
+pip-delete-this-directory.txt

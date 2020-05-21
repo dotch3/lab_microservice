@@ -4,12 +4,12 @@ from pymongo import MongoClient
 from Model.mongo_conexion import ConexionMongo
 
 
-class Usuario():
+class UsuarioModel():
     TYPES_USERS = ("solicitante", "proprietario")
     # Connect database
     # conexion_db = ConexionMongo()
 
-    def __init__(self, nome, sobrenome, address, celular, tipo_usuario):
+    def __init__(self, user_id=None, nome=None, sobrenome=None, address=None, celular=None, tipo_usuario=None):
         self.user_id = user_id
         self.nome = nome
         self.sobrenome = sobrenome
@@ -42,3 +42,20 @@ class Usuario():
     def get_all_items():
         # Getting all the data from the "usuarios" collection
         return ConexionMongo.get_all_data(collection='usuarios')
+
+    @classmethod
+    def get_item(cls, nome):
+        # Getting all the data from the "usuarios" collection
+        ITEMS = ConexionMongo.get_all_data(collection='usuarios')
+        data = ITEMS.get_json()  # to make lists from flask responses
+        data_found = None
+        for item in data:
+            if nome in str(item):
+                data_found = item
+        if data_found:
+            return data_found
+        else:
+            abort(
+                404, "Usuario com nome {nome} nao encontrado".format(
+                    nome=nome)
+            )
