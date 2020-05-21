@@ -24,7 +24,7 @@ ns.model = (function() {
           $event_pump.trigger("model_error", [xhr, textStatus, errorThrown]);
         });
     },
-    create: function(fname, lname) {
+    create: function(nome, sobrenome) {
       let ajax_options = {
         type: "POST",
         url: "api/usuarios",
@@ -32,8 +32,8 @@ ns.model = (function() {
         contentType: "application/json",
         //dataType: 'json',
         data: JSON.stringify({
-          fname: fname,
-          lname: lname,
+          nome: nome,
+          sobrenome: sobrenome,
         }),
       };
       $.ajax(ajax_options)
@@ -44,16 +44,17 @@ ns.model = (function() {
           $event_pump.trigger("model_error", [xhr, textStatus, errorThrown]);
         });
     },
-    update: function(fname, lname) {
+    update: function(nome, sobrenome) {
       let ajax_options = {
         type: "PUT",
-        url: "api/usuarios/" + lname,
+        url: "api/usuarios/" + sobrenome,
         accepts: "application/json",
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          fname: fname,
-          lname: lname,
+          nome: nome,
+          sobrenome: sobrenome,
+          email: email,
         }),
       };
       $.ajax(ajax_options)
@@ -64,10 +65,10 @@ ns.model = (function() {
           $event_pump.trigger("model_error", [xhr, textStatus, errorThrown]);
         });
     },
-    delete: function(lname) {
+    delete: function(sobrenome) {
       let ajax_options = {
         type: "DELETE",
-        url: "api/usuarios/" + lname,
+        url: "api/usuarios/" + sobrenome,
         accepts: "application/json",
         contentType: "plain/text",
       };
@@ -148,26 +149,28 @@ ns.controller = (function(m, v) {
 
   // Create our event handlers
   $("#create").click(function(e) {
-    let fname = $fname.val(),
-      lname = $lname.val();
+    let nome = $nome.val(),
+      sobrenome = $sobrenome.val(),
+      email = $email.val();
 
     e.preventDefault();
 
-    if (validate(fname, lname)) {
-      model.create(fname, lname);
+    if (validate(nome, sobrenome)) {
+      model.create(nome, sobrenome);
     } else {
       alert("Problema com os parâmetros: primeiro ou último nome");
     }
   });
 
   $("#update").click(function(e) {
-    let fname = $fname.val(),
-      lname = $lname.val();
+    let nome = $nome.val(),
+      sobrenome = $sobrenome.val(),
+      email = $email.val();
 
     e.preventDefault();
 
-    if (validate(fname, lname)) {
-      model.update(fname, lname);
+    if (validate(nome, sobrenome)) {
+      model.update(nome, sobrenome);
     } else {
       alert("Problema com os parâmetros: primeiro ou último nome");
     }
@@ -175,12 +178,12 @@ ns.controller = (function(m, v) {
   });
 
   $("#delete").click(function(e) {
-    let lname = $lname.val();
+    let sobrenome = $sobrenome.val();
 
     e.preventDefault();
 
-    if (validate("placeholder", lname)) {
-      model.delete(lname);
+    if (validate("placeholder", sobrenome)) {
+      model.delete(sobrenome);
     } else {
       alert("Problema com os parâmetros: primeiro ou último nome");
     }
@@ -197,7 +200,8 @@ ns.controller = (function(m, v) {
   $("table > tbody").on("dblclick", "tr", function(e) {
     let $target = $(e.target),
       nome,
-      sobrenome;
+      sobrenome,
+      email;
 
     nome = $target
       .parent()

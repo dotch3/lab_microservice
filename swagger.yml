@@ -11,7 +11,7 @@ produces:
 basePath: /api
 
 paths:
-  /usuarios:
+  /usuariosprofe:
     get:
       x-swagger-router-controller: Resources
       operationId: usuariosProfessor.read_all
@@ -57,7 +57,7 @@ paths:
         201:
           description: Sucesso ao criar
 
-  /usuarios/{lname}:
+  /usuariosprofe/{lname}:
     get:
       x-swagger-router-controller: Resources
       operationId: usuariosProfessor.read_one
@@ -107,7 +107,6 @@ paths:
       responses:
         200:
           description: Sucesso ao atualizar
-
     delete:
       x-swagger-router-controller: Resources
       operationId: usuariosProfessor.delete
@@ -123,11 +122,10 @@ paths:
       responses:
         200:
           description: Sucesso ao deletar
-
-  /otros:
+  /usuarios:
     get:
       x-swagger-router-controller: Resources
-      operationId: usuario
+      operationId: usuarioList.get
       tags:
         - MEU MONGO - USUARIOS GET ALL
       summary: Lista de Usuarios
@@ -152,7 +150,7 @@ paths:
   /items:
     get:
       x-swagger-router-controller: Resources
-      operationId: item
+      operationId: itemList.get
       tags:
         - MEU MONGO - ITEMS GET ALL
       summary: Lista de ITEMS

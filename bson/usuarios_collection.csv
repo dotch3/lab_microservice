@@ -1,0 +1,8 @@
+_id,﻿username,password,nome,sobrenome,address,celular,tipo_usuario
+ObjectId("5ec58b01814de331a3c32279"),jmercado,test2020,Jorgito,Mercado,av.Guarapiranga,11973141485,Proprietario
+ObjectId("5ec58b01814de331a3c3227a"),hgoes,test2021,Henrique,Goes,av.pertodeCasa,11928282825,Proprietario
+ObjectId("5ec58b01814de331a3c3227b"),rsantos,test2022,Reinaldo,Santos,av.RuaLivre,11828282824,Proprietario
+ObjectId("5ec58b01814de331a3c3227c"),jsilva,test2023,Joao,Silva,av.evergreen,11626288822,Solicitante
+ObjectId("5ec58b01814de331a3c3227d"),msoares,test2024,Marcos,Soares,av.Free,,Solicitante
+ObjectId("5ec58b01814de331a3c3227e"),edson,test2025,Edson,,,,Solicitante
+ObjectId("5ec58b01814de331a3c3227f"),lmorais,test2026,Liliana,Morais,,,Solicitante

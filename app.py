@@ -5,18 +5,22 @@ from flask import Flask
 from flask_cors import CORS
 from flask_restx import Api, Resource, fields
 
-from Resources.usuario import Usuario, UsuarioList
-from Resources.item import Item, ItemList
+from Resources.usuario import Usuario
+from Resources.usuarioList import UsuarioList
+from Resources.item import Item
+from Resources.itemList import ItemList
 
 
 # Defining the path for the templates
-APP_PATH = os.path.dirname(os.path.abspath(__file__))
+# APP_PATH = os.path.dirname(os.path.abspath(__file__))
 
 # Creating the conexion with app flask
 # app = connexion.App(__name__, specification_dir=APP_PATH)
 
 # app.add_api('swagger.yml')
-# CORS(app.app,resources=r'/api/*',methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
+# CORS(app.app, resources=r'/api/*',
+#      methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
+
 
 # Create a Flask WSGI application
 app_flask = Flask(__name__)
@@ -34,12 +38,6 @@ api.add_resource(ItemList, '/api/items')
 api.add_resource(Usuario, '/api/usuario/<string:nome>')
 api.add_resource(UsuarioList, '/api/usuarios')
 # @TODO crear los demas recursos listados
-# Register new Users/Proposta/Publicacao/Negociacao
-
-# api.add_resource(Proposta, '/proposta')
-# api.add_resource(Publicacao, '/publicacao')
-# api.add_resource(Negociacao, '/negociacao')
-# api.add_resource(UserRegister, '/register')
 
 
 @ app_flask.route('/home', methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
@@ -47,22 +45,22 @@ def home():
     return render_template('usuarios.html')
 
 
-@ app_flask.route('/api/items')
+@ app_flask.route('/api/items', methods=['GET'])
 def items():
     return "You said"
 
 
-@ app_flask.route('/api/item/<string:nome>')
+@ app_flask.route('/api/item/<string:nome>', methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
 def item_nome():
     return render_template('items.html')
 
 
-@ app_flask.route('/api/usuarios')
+@ app_flask.route('/api/usuarios', methods=['GET'])
 def usuarios():
     return render_template('usuarios.html')
 
 
-@ app_flask.route('/api/usuario/<string:nome>')
+@ app_flask.route('/api/usuario/<string:nome>', methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
 def usuario_nome():
     return render_template('items.html')
 
