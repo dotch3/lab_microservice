@@ -1,9 +1,10 @@
 from flask import jsonify, make_response, abort
-from pymongo import MongoClient
 from Model.mongo_conexion import ConexionMongo
 
 
 class ItemModel:
+    collection = "items"
+    db_inst = "local"
     def __init__(self, item_id=None, nome=None, descricao=None, data_inicio=None, data_final=None, status=None):
         self.item_id = item_id
         self.nome = nome
@@ -23,18 +24,25 @@ class ItemModel:
 
     @classmethod
     def get_item(cls, nome):
-        # Getting all the data from the "items" collection
-        ITEMS = ConexionMongo.get_all_data(collection='items')
-        data = ITEMS.get_json()  # to make lists from flask responses
-        data_found = None
-        for item in data:
-            if nome in str(item):
-                print("Eureka!")
-                data_found = item
+        """
+        This will get an item from an collection
+        :param nome: The nome of the item to find
+        :return: a dictionary
+        """
+        # Getting all the data from the "usuarios" collection
+        print(f"looking for {nome}")
+        # Will get an object BSON if item is found
 
+        # Using the jsonify thing:
+        data_found = ConexionMongo.get_dict_from_mongodb(db_inst=ItemModel.db_inst,
+                                                         collection=ItemModel.collection, mode="get_one", nome=nome)
+        print(data_found)
+        # Verifying if the _id obtained is an ObjectId valid
         if data_found:
-            return data_found
+            print("eureka! {}".format(data_found["_id"]))
+            return data_found  # return a dict
         else:
+            print("Oops, the aliens again!")
             abort(
                 404, "Item com nome {nome} nao encontrado".format(
                     nome=nome)

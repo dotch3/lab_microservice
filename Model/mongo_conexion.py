@@ -1,5 +1,6 @@
 from datetime import datetime
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 from flask import Flask
 from flask import jsonify, make_response, abort
 
@@ -17,7 +18,7 @@ class ConexionMongo:
     @staticmethod
     def create_conexion(db_inst):
         """
-        Thie will create the mongo db connexion
+        This will create the mongo db connexion
         :param db_inst: str The location of the database: local or remote
         :return:  mongodb client conexion
         """
@@ -28,31 +29,6 @@ class ConexionMongo:
             mongo_client = "other config-maybe"  # Docker
         db_conn = mongo_client[db_inst]
         return db_conn
-
-    @staticmethod
-    def get_dict_from_mongodb(db_inst, collection):
-        """
-        This method will iterate all the data found in a collection, jsonify them and return the items
-        :param db_inst: the local or remote mongo database instance
-        :param collection: The mongo collection to use
-        :return: List jsonified of items
-        """
-        db_conn = ConexionMongo.create_conexion(db_inst)
-        print("get_dict_from_mongodb")
-        items_db = db_conn[collection].find()
-        # Dictionary of items
-        ITEMS = {}
-        for i in items_db:
-            # Let's get the value of the _id and use it for item_id
-            object_id = i.pop('_id')
-            new_id = str(object_id)
-            i["_id"] = new_id
-            # Using the Id for the dictionary
-            ITEMS[new_id] = i
-        # Return a list
-        print(ITEMS)
-        print("End of get_dict_from_mongodb ")
-        return ITEMS
 
     @classmethod
     def get_all_data(cls, db_inst=None, collection=None):
@@ -69,7 +45,7 @@ class ConexionMongo:
             db_inst = 'local'
         with app.app_context():
 
-            ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst, collection)
+            ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst, collection, mode="get_all")
             my_dict = []
             for key in sorted(ITEMS.keys()):
                 temp = [key, ITEMS[key]]
@@ -84,6 +60,81 @@ class ConexionMongo:
             print("End of get_data_service ")
             return dict_items
 
+    @staticmethod
+    def get_dict_from_mongodb(db_inst, collection, mode="get_all", nome=None, _id=None):
+        """
+        This method will iterate all the data found in a collection, jsonify them and return the items
+        :param db_inst: the local or remote mongo database instance
+        :param collection: The mongo collection to use
+        :param mode: The mode to perform the mongo queries: find;findOne;
+        :param nome: The name of the item to find
+        :param _id: The id of the item to find
+        :return: List jsonified of items
+        """
+        ITEMS = {}
+        items_db = ""
+        mongo_conn = ConexionMongo.create_conexion(db_inst)
+        if mode == "get_all":
+            try:
+                print("get_dict_from_mongodb::get_all")
+                # This is the key!!!
+                print("test")
+                items_db = mongo_conn[collection].find()
+                print("test")
+                print("Working with the data retrieved...")
+                print(items_db)
+                print(type(items_db))
+                for i in items_db:
+                    print(i)
+                    # Let's get the value of the _id and use it for item_id
+                    object_id = i.pop('_id')
+                    new_id = str(object_id)
+                    i["_id"] = new_id
+                    # Using the Id for the dictionary
+                    ITEMS[new_id] = i
+                # Return a list
+                print(ITEMS)
+                print("End of get_dict_from_mongodb ")
+                return ITEMS
+
+            except Exception as e:
+                print(f"ERROR MONGO:  get_dict_from_mongodb::end get_all {e}")
+
+        elif mode == "get_one":
+            print("get_dict_from_mongodb::get_one")
+            try:
+                # Searching by nome
+                print("try")
+                if nome and not _id:
+                    print("by nome")
+                    query = {"nome": nome}
+                    items_db = mongo_conn[collection].find_one(query)
+                    print(type(items_db))
+                    print("Encontrou o documento {}...enviando...".format(items_db["_id"]))
+                    if ObjectId.is_valid(items_db["_id"]):
+                        print("The object is a BSON")
+                        return items_db
+                    else:
+                        return make_response("Record  com nome {nome} nao foi encontrada".format(
+                            nome=nome), 404)
+
+                elif _id:
+                    print("by ID")
+                    # Using the ObjectId class for BSON objects. Kaboom!w
+                    find_id = ObjectId(_id)
+                    query = {"_id": find_id}
+                    # Return a dictionary
+                    items_db = mongo_conn[collection].find_one(query)
+                    print("Encontrou o documento {}, enviando".format(items_db["_id"]))
+                    if ObjectId.is_valid(items_db["_id"]):
+                        print("The object is a BSON")
+                        return items_db
+                    else:
+                        return make_response("Record  com _id {_id} nao foi encontrada".format(
+                            _id=_id), 404)
+            except Exception as e:
+                print(f"ERROR MONGO:  get_dict_from_mongodb::get_one {e}")
+
     @classmethod
     def read_one(cls, db_inst, collection, item_name):
         """
@@ -93,7 +144,7 @@ class ConexionMongo:
         :param item_name: the name of the item to find
         :return: the item if this is found
         """
-        ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst, collection)
+        ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst, collection, mode="get_one")
         if item_name in ITEMS:
             item = ITEMS.get(item_name)
         else:
@@ -102,3 +153,5 @@ class ConexionMongo:
                     item_name=item_name)
             )
         return item
+
+    # Improved Methods to manipulate the data retrieved from MongoDB queries

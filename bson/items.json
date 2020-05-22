@@ -1,0 +1,45 @@
+[{
+  "_id": {
+    "$oid": "5ec4a4e5814de331a3c32275"
+  },
+  "nome": "furadeira",
+  "descricao": "furadeira de alto impato 110/220 V",
+  "data_inicio": "2020-05-13T10:53:53Z",
+  "data_final": "2020-05-30T10:53:53Z",
+  "status": "livre"
+},{
+  "_id": {
+    "$oid": "5ec4a4e5814de331a3c32276"
+  },
+  "nome": "martelo",
+  "descricao": "Martelo para trabalho liviano",
+  "data_inicio": "2020-05-10T12:50:53Z",
+  "data_final": "2020-06-10T10:53:53Z",
+  "status": "livre"
+},{
+  "_id": {
+    "$oid": "5ec4a4e5814de331a3c32277"
+  },
+  "nome": "Impressora HP",
+  "descricao": "Impressora HP com scanner",
+  "data_inicio": "2020-05-11T12:50:53Z",
+  "data_final": "2020-05-30T10:53:53Z",
+  "status": "emprestado"
+},{
+  "_id": {
+    "$oid": "5ec4a4e5814de331a3c32278"
+  },
+  "descricao": "Chave de fenda inglesa 32cm",
+  "data_inicio": "2020-05-04T12:50:53Z",
+  "data_final": "2020-05-30T10:53:53Z",
+  "status": "emprestado"
+},{
+  "_id": {
+    "$oid": "5ec743d855f0da7dbbf1dbd6"
+  },
+  "nome": "Chave de fenda grande ",
+  "descricao": "Chave de fenda inglesa 55cm",
+  "data_inicio": "2020-05-04T12:50:53Z",
+  "data_final": "2020-05-30T10:53:53Z",
+  "status": "emprestado"
+}]
