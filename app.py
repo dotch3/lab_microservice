@@ -32,37 +32,39 @@ api = Api(app_flask,
           default_label='This is the swagger UI for API testing')
 
 # Items
-api.add_resource(Item, '/api/item/<string:nome>')
 api.add_resource(ItemList, '/api/items')
+api.add_resource(Item, '/api/item/<string:nome>')
+
+
 # Users
-api.add_resource(Usuario, '/api/usuario/<string:nome>')
 api.add_resource(UsuarioList, '/api/usuarios')
+api.add_resource(Usuario, '/api/usuario/<string:nome>')
+
 # @TODO crear los demas recursos listados
 
 
-@ app_flask.route('/home', methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
+@ app_flask.route('/home', methods=['GET', 'POST'])
 def home():
     return render_template('index.html')
 
 
 @ app_flask.route('/api/items', methods=['GET'])
 def items():
-    return "You said"
+    return render_template('item.html')
 
 
-@ app_flask.route('/api/item/<string:nome>', methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
+@ app_flask.route('/api/item/<string:nome>', methods=['GET', 'POST', 'PUT'])
 def item_nome():
     return render_template('items.html')
-
 
 @ app_flask.route('/api/usuarios', methods=['GET'])
 def usuarios():
     return render_template('usuarios.html')
 
 
-@ app_flask.route('/api/usuario/<string:nome>', methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
+@ app_flask.route('/api/usuario/<string:nome>', methods=['GET', 'POST', 'PUT'])
 def usuario_nome():
-    return render_template('items.html')
+    return render_template('usuario.html')
 
 
 if __name__ == '__main__':

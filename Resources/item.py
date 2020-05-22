@@ -9,9 +9,9 @@ class Item(Resource):
     # Getting an item with the name "nome"
     def get(self, nome):
         """
-        Function to get an item of type Item
-        :param nome: The name of the Item to find if exists in the mongodb collection
-        :return: Flask responses
+        Function to get an document of 'Item' type from the items mongoDB collection based on the  keyword 'nome'
+         :param nome: The name of the document type 'Item' to find if exists in the mongodb collection
+        :return: mongo document of type 'Item'
         """
         print("GET")
         itemmodel_obj = ItemModel()
