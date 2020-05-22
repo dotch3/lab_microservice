@@ -1,4 +1,4 @@
-from flask import make_response, abort
+from flask import make_response
 from Model.mongo_conexion import ConexionMongo
 from bson import ObjectId
 
@@ -126,8 +126,8 @@ class UsuarioModel:
         # Getting all the data from the "usuarios" collection
         return ConexionMongo.get_all_data(collection=UsuarioModel.collection)
 
-    @classmethod
-    def get_item(cls, nome):
+    @staticmethod
+    def get_item(nome):
         """
         This will get an item from an collection
         :param nome: The nome of the item to find
@@ -151,8 +151,54 @@ class UsuarioModel:
             return make_response(
                 "usuario  nao foi encontrado, documento inexistente", 404)
 
-    @classmethod
-    def delete_user(cls, nome=None, _id=None):
+    @staticmethod
+    def update_user(nome, usuario_data):
+        """
+        This will update a document type "Usuario" if found
+        :param nome: the nome of the 'Usuario' document
+        :param usuario_data: the dictionary to use for the update
+        :return: a flask response
+        """
+        # create the query to find the user first
+
+        print("TRY ")
+        try:
+            query = {"nome": nome}
+            user_set_values = {"$set": {
+                "nome": nome,
+                "sobrenome": usuario_data.get("sobrenome"),
+                "email": usuario_data.get("email"),
+                "address": usuario_data.get("address"),
+                "tipo_usuario": usuario_data.get("tipo_usuario"),
+                "last_update": usuario_data.get("last_update"), }
+            }
+            result = ConexionMongo.update_document(db_inst=UsuarioModel.db_inst,
+                                                   collection=UsuarioModel.collection, query=query,
+                                                   values_set=user_set_values)
+            # Verifying the results obtained
+            if result.modified_count > 0:
+                print("Modified succeeded")
+                print(str(type(result.modified_count)))
+                print(result.modified_count)
+                return result # returning a positive value
+            else:
+                return make_response(
+                    "usuario  nao foi atualizado", 404)
+
+        except Exception as e:
+            print("Error atualizando o  usuario: {}".format(e))
+            return make_response(
+                "usuario nao foi atualizado", 400
+            )
+
+    @staticmethod
+    def delete_user(nome=None, _id=None):
+        """
+        Will delete a document type "Usuario" if found
+        :param nome: str The nome of the usuario to be removed
+        :param _id: ObjectID The id of the usuario to be removed (not available for MVP)
+        :return: a response object
+        """
         # Checking if the user exists in the collection
         print(f"looking for {nome}")
         user_deleted = False
@@ -164,11 +210,13 @@ class UsuarioModel:
                 result = ConexionMongo.remove_document(db_inst=UsuarioModel.db_inst, collection=UsuarioModel.collection,
                                                        query=query)
                 # Verifying the results obtained
-                if result:
-                    if ObjectId.is_valid(result["_id"]):
-                        return result
+                if "dict" in str(type(result)) or "ObjectId" in str(type(result)):
+                    print("document deleted ")
+                    return result
                 else:
-                    return user_deleted
+                    print("user not found, returning False")
+                    return make_response(
+                        "usuario  nao foi deletado, documento inexistente", 404)
         except Exception as e:
             print(f"Delete failed {e}")
             return make_response(

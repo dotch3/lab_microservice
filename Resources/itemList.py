@@ -1,5 +1,4 @@
 # This  will call the Resource Item
-import json
 from flask_restx import Resource
 from Model.item_model import ItemModel
 

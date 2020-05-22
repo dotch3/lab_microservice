@@ -1,4 +1,3 @@
-from datetime import datetime
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from flask import Flask
@@ -15,14 +14,15 @@ class ConexionMongo:
     def __repr__(self):
         return f"<MongoConnClient:{self.client}, database: {self.service} , collection {self.collection}.>"
 
-    @staticmethod
-    def create_conexion(db_inst):
+    @classmethod
+    def create_conexion(cls, db_inst):
         """
         This will create the mongo db connexion
         :param db_inst: str The location of the database: local or remote
         :return:  mongodb client conexion
         """
         print("create_conexion")
+        mongo_client = ""
         if db_inst == "local":
             mongo_client = MongoClient("mongodb://localhost:27017/")  # Local
         elif db_inst == "docker":
@@ -38,14 +38,14 @@ class ConexionMongo:
         :param collection: The mongo collection to use
         :return: List jsonified of Items found in the mongo db:collection
         """
-        print(f"get_all_data for collection \"{collection}\"")
+        print(f"get_all_data for collection \"{collection}\" ")
         # In order to jsonify the dictionary, is needed to call it inside the app_context
         app = Flask(__name__)
         if not db_inst:
             db_inst = 'local'
         with app.app_context():
 
-            ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst, collection, mode="get_all")
+            ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst=db_inst, collection=collection, mode="get_all")
             my_dict = []
             for key in sorted(ITEMS.keys()):
                 temp = [key, ITEMS[key]]
@@ -157,8 +157,8 @@ class ConexionMongo:
             except Exception as e:
                 print(f"ERROR MONGO:  get_dict_from_mongodb::create {e}")
 
-    @classmethod
-    def add_document(cls, db_inst, collection, python_dict):
+    @staticmethod
+    def add_document(db_inst, collection, python_dict):
         """
         This will add a new document to the collection
         :param db_inst: the local or remote database
@@ -174,8 +174,43 @@ class ConexionMongo:
         except Exception as e:
             print(f"ERROR MONGO:  create_document  {e}")
 
-    @classmethod
-    def remove_document(cls, db_inst, collection, query):
+    @staticmethod
+    def update_document(db_inst, collection, query, values_set):
+        """
+        Funtion to dupdate a mongoDB document using the $set operator
+        :param db_inst: The  local or remote mongoDB
+        :param collection: the collection to use for the operation
+        :param query: the query for find the document
+        :param values_set: the values to use for the update
+        :return:
+        """
+        try:
+            print("updating document ")
+            mongo_conn = ConexionMongo.create_conexion(db_inst)
+            result = mongo_conn[collection].update_one(query, values_set)
+            # print ("acknowledged:", result.acknowledged)
+            # # integer of the number of docs modified
+            # print ("number of docs updated:", result.modified_count)
+            # # dict object with more info on API call
+            # print ("raw_result:", result.raw_result)
+            if "None" not in str(type(result)):
+                print("mongo check results")
+                print(result.raw_result)
+                if result.modified_count > 0:
+                    print("documento atualizado ")
+                    return result
+                else:
+                    print("not found/updated")
+                    return False
+            else:
+                print("not found")
+                return False
+
+        except Exception as e:
+            print(f"ERROR MONGO:  update_document  {e}")
+
+    @staticmethod
+    def remove_document(db_inst, collection, query):
         """
         This will find and remove a document inside a collection
         :param db_inst:the local or remote mongodb location
@@ -191,9 +226,6 @@ class ConexionMongo:
             mongo_conn = ConexionMongo.create_conexion(db_inst)
             result = mongo_conn[collection].find_one_and_delete(query)
 
-            print(result)
-            print(str(result))
-            print(type(result))
             if "None" not in str(result):
                 if ObjectId.is_valid(result["_id"]):
                     print("documento eliminado " + str(result["_id"]))
@@ -203,8 +235,8 @@ class ConexionMongo:
         except Exception as e:
             print(f"ERROR MONGO:  remove_document  {e}")
 
-    @classmethod
-    def read_one(cls, db_inst, collection, item_name):
+    @staticmethod
+    def read_one(db_inst, collection, item_name):
         """
         This will find if an item is part of the mongodb collection
         :param db_inst: the local or remote mongo database instance

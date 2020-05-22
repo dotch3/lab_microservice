@@ -2,8 +2,7 @@
 from datetime import datetime
 from Model.usuario_model import UsuarioModel
 from flask_restx import Resource
-from flask import make_response
-from bson import ObjectId
+from flask import make_response, abort
 
 
 class Usuario(Resource):
@@ -13,7 +12,8 @@ class Usuario(Resource):
     def get(self, nome):
         """
         Function to get  a document of type 'Usuario' from the mongoDB based on the  keyword 'nome'
-        :param nome: str The name of the document type 'Usuario' to find if exists in the mongodb collection, it is unique
+        :param nome: str The name of the document type 'Usuario' to find if exists in the mongodb collection,
+        it is unique
         :return: mongo document of type 'Usuario'
         """
         print("GET")
@@ -26,7 +26,7 @@ class Usuario(Resource):
                 return make_response(
                     "usuario encontrado com sucesso", 200
                 )
-            elif res_docu["nome"]==nome:
+            elif res_docu["nome"] == nome:
                 return make_response(
                     "usuario encontrado com sucesso", 200
                 )
@@ -34,10 +34,9 @@ class Usuario(Resource):
         else:
             return make_response("usuario no existe na collection", 404)
 
-
     def post(self, nome, sobrenome=None, email=None, address=None, password=None, username=None, celular=None):
         """
-        Function to create a new document of 'Usuario' type, using the 'Factory'pattern. 2 types of Usuarios: <solicitante>, <proprietario>
+        Function to create a new 'Usuario' (proprietario,solicitante), using the 'Factory'pattern
         :param nome: str The nome of the new usuario that is unique
         :param sobrenome: str The sobrenome of the new usuario, not unique
         :param email: str The email of the new usuario, not unique
@@ -72,29 +71,82 @@ class Usuario(Resource):
                 return make_response("usuario criado com sucesso", 200)
             else:
                 return make_response(
-                    "usuario  nao foi criado, documento existente", res_user_post.status_code)
-        elif "ObjectId" in str(type(res_user_post)):
+                    "usuario  {nome} nao foi criado, documento existente {code}".format(code=res_user_post.status_code,
+                                                                                        nome=usuario.get("nome")),
+                    res_user_post.status_code)
+        elif "ObjectId" in str(type(res_user_post) or "dict" in str(type(res_user_post))):
             return make_response(
                 "usuario  usuario.get('nome') criado com sucesso", 200
             )
 
-    def delete(self, nome=None, _id=None):
+    def put(self, nome, usuario=None):
         """
-        Function to delete a  document of 'Usuario' type from the mongoDB collection, based on the existence of keyword entered: 'nome'
+        Function to update an existent document of type 'Usuario' base don nome keyword entered
+        :param nome: str The nome of  the document type 'Usuario' to be updated
+        :param usuario: dictionary with the parameters to be used for the update of the document
+        :return: dictionary 'Usuario' with new values
+        """
+        print("PUT")
+        # Using mocked data for testing purposes:
+        usuario_data = []
+        if not usuario:
+            print("none usuario retrieved , lets mockup it for tests")
+            usuario_data = {
+                "nome": nome,
+                "sobrenome": "Soarez" + str(datetime.now().microsecond),
+                "email": "test_updated" + str(datetime.now().microsecond) + "@test.org",
+                "address": "av.TestingfyingUpdate" + str(datetime.now().microsecond),
+                "tipo_usuario": "proprietario",
+                "last_update": str(datetime.now().strftime("%d-%m-%Y_%H_%M_%S"))
+            }
+
+        else:
+            print("data retrieved")
+            usuario_data = usuario
+
+        print(usuario_data)
+        res_user_updated = UsuarioModel.update_user(nome=nome, usuario_data=usuario_data)
+        print("resultado")
+        print(str(type(res_user_updated)))
+        if "None" not in str(type(usuario_data)):
+            if res_user_updated.modified_count > 0:
+                return make_response(
+                    " documento de usuario {nome} atualizado com sucesso ".format(nome=nome), 202
+                )
+            elif "flask.wrappers.Response" in str(type(res_user_updated)):
+                if res_user_updated.status_code != 400:
+                    abort(404, " documento de usuario {nome} nao foi encontrado".format(nome=nome))
+        else:
+            print("did not find the user")
+            abort(400, " update do usuario {nome} nao e permitido, verifique seus dados".format(nome=nome))
+
+    # else:
+    #     abort(
+    #         404, "Pessoa com sobrenome {lname} nao encontrada".format(lname=lname)
+    #     )
+
+    def delete(self, nome, _id=None):
+        """
+        Function to delete a  document of 'Usuario' type from the mongoDB collection, using 'nome' as keyword
         :param nome: str The nome of the 'Usuario' to find and delete from the mongoDB collection
-        :param _id: ObjectId, the identifier of the document that can be used to find the document and delete it too (Not part of the MVP)
+        :param _id: ObjectId, the identifier of the document that can be used to find the document and delete it too
+        (Not part of the MVP)
         :return: A pymongo.results.DeleteResult object
         """
         print("DELETE")
         user_obj = UsuarioModel()
         res_user_delete = user_obj.delete_user(nome=nome, _id=_id)
         # Checking the response from the Model
-        if res_user_delete:
-            if "ObjectId" in str(type(res_user_delete)):
-                print("docs deleted:", res_user_delete["nome"])
+        if "ObjectId" in str(type(res_user_delete)) or "dict" in str(type(res_user_delete)):
+            print("The object is a BSON")
+            if res_user_delete.get("nome") == nome:
                 return make_response(
-                    "documento de usuario apagado com sucesso {res_user_delete.get_data()}", 202
+                    " documento de usuario {nome} apagado com sucesso ".format(nome=nome), 202
                 )
+            elif res_user_delete["nome"] == nome:
+                return make_response(
+                    "documento de usuario {nome} apagado com sucesso ".format(nome=nome), 202)
+
         else:
-            return make_response(
-                "usuario nao foi deletado", 304)
+            print("did not find the user")
+            abort(404, " documento de usuario {nome} nao foi encontrado, verifique seus dados".format(nome=nome))

@@ -1,7 +1,6 @@
 # This  will call the Resource Item
-from flask_restx import Resource, Api
+from flask_restx import Resource
 from Model.item_model import ItemModel
-from bson import ObjectId
 from flask import make_response
 
 

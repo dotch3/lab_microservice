@@ -1,15 +1,11 @@
-import os
-import connexion
 from flask import render_template
 from flask import Flask
-from flask_cors import CORS
-from flask_restx import Api, Resource, fields
+from flask_restx import Api
 
 from Resources.usuario import Usuario
 from Resources.usuarioList import UsuarioList
 from Resources.item import Item
 from Resources.itemList import ItemList
-
 
 # Defining the path for the templates
 # APP_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -35,34 +31,43 @@ api = Api(app_flask,
 api.add_resource(ItemList, '/api/items')
 api.add_resource(Item, '/api/item/<string:nome>')
 
-
 # Users
+routes = [
+    '/api/usuario/<string:nome>',
+    # '/api/usuario/update/<int:id>/<string:action>',
+]
 api.add_resource(UsuarioList, '/api/usuarios')
-api.add_resource(Usuario, '/api/usuario/<string:nome>')
+api.add_resource(Usuario, *routes)
+
 
 # @TODO crear los demas recursos listados
 
+@app_flask.route('/', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def index():
+    return render_template('usuarios.html')
 
-@ app_flask.route('/home', methods=['GET', 'POST'])
+
+@app_flask.route('/home', methods=['GET', 'POST', 'DELETE'])
 def home():
     return render_template('index.html')
 
 
-@ app_flask.route('/api/items', methods=['GET'])
+@app_flask.route('/api/items', methods=['GET'])
 def items():
-    return render_template('item.html')
+    return render_template('items.html')
 
 
-@ app_flask.route('/api/item/<string:nome>', methods=['GET', 'POST', 'PUT'])
+@app_flask.route('/api/item/<string:nome>', methods=['GET'])
 def item_nome():
     return render_template('items.html')
 
-@ app_flask.route('/api/usuarios', methods=['GET'])
+
+@app_flask.route('/api/usuarios', methods=['GET'])
 def usuarios():
     return render_template('usuarios.html')
 
 
-@ app_flask.route('/api/usuario/<string:nome>', methods=['GET', 'POST', 'PUT'])
+@app_flask.route('/api/usuario/<string:nome>', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def usuario_nome():
     return render_template('usuario.html')
 

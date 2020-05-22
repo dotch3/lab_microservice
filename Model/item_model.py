@@ -1,4 +1,4 @@
-from flask import jsonify, make_response, abort
+from flask import make_response
 from Model.mongo_conexion import ConexionMongo
 
 
@@ -18,10 +18,11 @@ class ItemModel:
         return f"<Item: ID:{self.item_id}, {self.nome} , status {self.status}. Disponivel  {self.data_inicio} - " \
                f"{self.data_final}>"
 
-    @classmethod
-    def get_all_items(cls):
+    @staticmethod
+    def get_all_items():
         # Getting all the data from the "items" collection
-        return ConexionMongo.get_all_data(collection='items')
+        print("get_all_items")
+        return ConexionMongo.get_all_data(collection="items")
 
     @classmethod
     def get_item(cls, nome):
@@ -46,21 +47,21 @@ class ItemModel:
             return make_response(
                 "item  nao foi encontrado, documento inexistente", 404)
 
-    @classmethod
-    def create_item(cls, nome, descricao, data_inicio, data_final, status):
-        ITEMS = ConexionMongo.get_dict_from_mongodb()
-        if lname not in ITEMS and lname is not None:
-            item = {
-                "address": lname,
-                "fname": fname,
-                "timestamp": get_timestamp(),
-            }
-            db.clientes.insert_one(item)
-            return make_response(
-                "{lname} criado com sucesso".format(lname=lname), 201
-            )
-        else:
-            abort(
-                406,
-                "Pessoa com sobrenome {lname} ja existe".format(lname=lname),
-            )
+    # @classmethod
+    # def create_item(cls, nome, descricao, data_inicio, data_final, status):
+    #     ITEMS = ConexionMongo.get_dict_from_mongodb()
+    #     if lname not in ITEMS and lname is not None:
+    #         item = {
+    #             "address": lname,
+    #             "fname": fname,
+    #             "timestamp": get_timestamp(),
+    #         }
+    #         db.clientes.insert_one(item)
+    #         return make_response(
+    #             "{lname} criado com sucesso".format(lname=lname), 201
+    #         )
+    #     else:
+    #         abort(
+    #             406,
+    #             "Pessoa com sobrenome {lname} ja existe".format(lname=lname),
+    #         )
