@@ -42,6 +42,7 @@ class ItemModel:
 
         if "dict" in str(type(data_found)) or "ObjectId" in str(type(data_found)):
             print("data found")
+            print(str(data_found))
             return data_found
         else:
             return make_response(

@@ -20,23 +20,6 @@ class UsuarioModel:
         self.celular = celular
         self.tipo_usuario = tipo_usuario
 
-    @classmethod
-    def criar_proprietario(cls, nome=None, sobrenome=None, email=None, address=None, username=None, password=None,
-                           celular=None):
-        """
-        Class function following the "FABRIC" pattern, it will create a "usuario" object but with
-        "tipo_usaurio=proprietario"
-        :param nome: str Nome do usuario
-        :param sobrenome: str o sobrenome do usuario
-        :param email: email The email of the usuario
-        :param address: The address of the usuario
-        :param username: This is the username to identify the usuario in the system
-        :param password: This by the moment is being type text, it is the password for the usuario
-        :param celular: The cellphone of the usuario
-        :return: A new usuario object of "proprietario" type
-        """
-
-        pass
 
     @classmethod
     def criar_solicitante(cls, nome=None, sobrenome=None, email=None, address=None, username=None, password=None,
@@ -55,6 +38,25 @@ class UsuarioModel:
         """
         return UsuarioModel(nome=nome, sobrenome=sobrenome, email=email, address=address, username=username,
                             password=password, celular=celular, tipo_usuario=UsuarioModel.TYPES_USERS[0])
+
+    @classmethod
+    def criar_proprietario(cls, nome=None, sobrenome=None, email=None, address=None, username=None, password=None,
+                           celular=None):
+        """
+        Class function following the "FABRIC" pattern, it will create a "usuario" object but with
+        "tipo_usaurio=proprietario"
+        :param nome: str Nome do usuario
+        :param sobrenome: str o sobrenome do usuario
+        :param email: email The email of the usuario
+        :param address: The address of the usuario
+        :param username: This is the username to identify the usuario in the system
+        :param password: This by the moment is being type text, it is the password for the usuario
+        :param celular: The cellphone of the usuario
+        :return: A new usuario object of "proprietario" type
+        """
+
+        return UsuarioModel(nome=nome, sobrenome=sobrenome, email=email, address=address, username=username,
+                            password=password, celular=celular, tipo_usuario=UsuarioModel.TYPES_USERS[1])
 
     @staticmethod
     def novo_solicitante(usuario):
