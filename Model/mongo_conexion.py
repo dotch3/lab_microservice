@@ -105,19 +105,23 @@ class ConexionMongo:
             print(nome)
             try:
                 # Searching by nome
-                if nome and _id == None:
+                if nome and not _id:
                     print("by nome")
                     query = {"nome": nome}
                     print(query)
                     items_db = mongo_conn[collection].find_one(query)
                     print(type(items_db))
-                    print("Encontrou o documento {}...enviando...".format(items_db["_id"]))
-                    if ObjectId.is_valid(items_db["_id"]):
-                        print("The object is a BSON")
+                    if "ObjectId" in str(type(items_db)):
+                        if ObjectId.is_valid(items_db["_id"]):
+                            print("Encontrou o documento {}...enviando...".format(items_db["_id"]))
+                            return items_db
+                    elif "dict" in str(type(items_db)):
+                        print("dictionary")
+                        print("dictionary " + str(items_db.get("_id")))
                         return items_db
                     else:
-                        return make_response("Record  com nome {nome} nao foi encontrada".format(
-                            nome=nome), 404)
+                        print(f"Nao se encontra o documento com esse nome {nome}".format())
+                        return False
 
                 elif _id:
                     print("by ID")
@@ -139,13 +143,15 @@ class ConexionMongo:
             print("get_dict_from_mongodb::create")
             try:
                 # Searching by nome
-                if nome and _id == None:
+                if nome and not _id:
                     print("by nome")
                     query = {"nome": nome}
                     print(query)
                     items_db = mongo_conn[collection].find_one(query)
+
                     if items_db:
-                        return items_db["_id"]
+                        print(items_db["_id"])
+                        return items_db
                     else:
                         return False
             except Exception as e:
@@ -167,6 +173,35 @@ class ConexionMongo:
             return result_object
         except Exception as e:
             print(f"ERROR MONGO:  create_document  {e}")
+
+    @classmethod
+    def remove_document(cls, db_inst, collection, query):
+        """
+        This will find and remove a document inside a collection
+        :param db_inst:the local or remote mongodb location
+        :param collection: the mongodb collection to use
+        :param query: the mongoquery
+        :return:  mongodbResults
+        """
+        # document matching this query will get deleted
+        # some_query = {"target field": "target value"}
+
+        try:
+            print("deleting document ")
+            mongo_conn = ConexionMongo.create_conexion(db_inst)
+            result = mongo_conn[collection].find_one_and_delete(query)
+
+            print(result)
+            print(str(result))
+            print(type(result))
+            if "None" not in str(result):
+                if ObjectId.is_valid(result["_id"]):
+                    print("documento eliminado " + str(result["_id"]))
+                    return result
+            else:
+                return False
+        except Exception as e:
+            print(f"ERROR MONGO:  remove_document  {e}")
 
     @classmethod
     def read_one(cls, db_inst, collection, item_name):

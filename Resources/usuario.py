@@ -15,11 +15,20 @@ class Usuario(Resource):
         usermodel_obj = UsuarioModel()
         res_docu = usermodel_obj.get_item(nome=nome)
         # Checking the response from the Model
-        if ObjectId.is_valid(res_docu["_id"]):
+        if "ObjectId" in str(type(res_docu)) or "dict" in str(type(res_docu)):
             print("The object is a BSON")
-            return make_response(
-                "usuario encontrado com sucesso", 200
-            )
+            if res_docu.get("nome") == nome:
+                return make_response(
+                    "usuario encontrado com sucesso", 200
+                )
+            elif res_docu["nome"]==nome:
+                return make_response(
+                    "usuario encontrado com sucesso", 200
+                )
+
+        else:
+            return make_response("usuario no existe na collection", 404)
+
 
     def post(self, nome, sobrenome=None, email=None, address=None, password=None, username=None, celular=None):
         print("POST")
@@ -47,7 +56,7 @@ class Usuario(Resource):
                 return make_response("usuario criado com sucesso", 200)
             else:
                 return make_response(
-                    "usuario  nao foi criado", res_user_post.status_code)
+                    "usuario  nao foi criado, documento existente", res_user_post.status_code)
         elif "ObjectId" in str(type(res_user_post)):
             return make_response(
                 "usuario  usuario.get('nome') criado com sucesso", 200
@@ -58,13 +67,12 @@ class Usuario(Resource):
         user_obj = UsuarioModel()
         res_user_delete = user_obj.delete_user(nome=nome, _id=_id)
         # Checking the response from the Model
-        if "flask.wrappers.Response" in str(type(res_user_delete)):
-            if res_user_delete.status_code < 300 or "usuario nao foi apagado" not in str(res_user_delete.get_data()):
-                return make_response("usuario apagado com sucesso", 200)
-            else:
+        if res_user_delete:
+            if "ObjectId" in str(type(res_user_delete)):
+                print("docs deleted:", res_user_delete["nome"])
                 return make_response(
-                    "usuario nao foi apagado", res_user_delete.status_code)
-        elif "ObjectId" in str(type(res_user_delete)):
+                    "documento de usuario apagado com sucesso {res_user_delete.get_data()}", 202
+                )
+        else:
             return make_response(
-                "usuario apagado com sucesso", 200
-            )
+                "usuario nao foi deletado", 304)

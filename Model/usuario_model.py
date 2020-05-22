@@ -1,6 +1,5 @@
 from flask import make_response, abort
 from Model.mongo_conexion import ConexionMongo
-from bson import json_util
 from bson import ObjectId
 
 
@@ -8,9 +7,6 @@ class UsuarioModel:
     TYPES_USERS = ("solicitante", "proprietario")
     collection = "usuarios"
     db_inst = "local"
-
-    # Connect database
-    # conexion_db = ConexionMongo()
 
     def __init__(self, user_id=None, nome=None, sobrenome=None, email=None, address=None, username=None, password=None,
                  celular=None, tipo_usuario=None):
@@ -78,8 +74,11 @@ class UsuarioModel:
         try:
             print("TRY")
             data_found = ConexionMongo.get_dict_from_mongodb(db_inst=UsuarioModel.db_inst,
-                                                             collection=UsuarioModel.collection, mode="get_one",
+                                                             collection=UsuarioModel.collection, mode="create",
                                                              nome=nome)
+            print("data found?")
+            print(str(data_found))
+            print(type(data_found))
             if not data_found:  # Data not found
                 # Preparing the user information, this should happening when data is retrieved from UI and pass
                 # through the system
@@ -111,12 +110,11 @@ class UsuarioModel:
 
             elif ObjectId.is_valid(data_found["_id"]):
                 print("The object exists")
-                return make_response("{nome} ja existe na collection {collection}, nao se criara o usuario".format(
-                    nome=nome, collection=UsuarioModel.collection), 401)
+                return make_response("usuario ja existe na collection, nao se criara o usuario", 401)
         except Exception as e:
             print("Error criando o novo usuario: {}".format(e))
             return make_response(
-                "usuario nao foi criado", 500
+                "usuario nao foi criado, ja existe", 500
             )
 
     @staticmethod
@@ -143,67 +141,36 @@ class UsuarioModel:
         data_found = ConexionMongo.get_dict_from_mongodb(db_inst=UsuarioModel.db_inst,
                                                          collection=UsuarioModel.collection, mode="get_one", nome=nome)
         print(data_found)
+
+        print(type(data_found))
         # Verifying if the _id obtained is an ObjectId valid
-        if data_found:
-            print("eureka! {}".format(data_found["_id"]))
-            return data_found  # return a dict
+
+        if "dict" in str(type(data_found)) or "ObjectId" in str(type(data_found)):
+            return data_found
         else:
-            print("Oops, the aliens again!")
-            abort(
-                404, "Usuario com nome {nome} nao encontrado".format(
-                    nome=nome)
-            )
+            return make_response(
+                "usuario  nao foi encontrado, documento inexistente", 404)
 
     @classmethod
     def delete_user(cls, nome=None, _id=None):
         # Checking if the user exists in the collection
         print(f"looking for {nome}")
-        ITEMS = ConexionMongo.get_all_data(collection=UsuarioModel.collection)
-        # If both values ae provided
-        user_in_collection = False
+        user_deleted = False
         try:
             # Searching by nome
             print("try")
             if nome and not _id:
                 query = {"nome": nome}
-                print("nome and not id")
-                item_found = UsuarioModel.user_in_database(
-                    data_response=ITEMS, nome=nome)
-                # When the item is inside the collection
-                if item_found:
-                    print("ITEM FOUND")
-                    # Mongoclient
-                    db_conn = ConexionMongo.create_conexion("local")
-                    _id = db_conn[UsuarioModel.collection].delete_one(query)
-                    # if the deletion was succeeded the count is >0
-                    return _id.deleted_count
+                result = ConexionMongo.remove_document(db_inst=UsuarioModel.db_inst, collection=UsuarioModel.collection,
+                                                       query=query)
+                # Verifying the results obtained
+                if result:
+                    if ObjectId.is_valid(result["_id"]):
+                        return result
                 else:
-                    return make_response(
-                        "{nome} nao encontrado".format(nome=nome), 404
-                    )
-            # Searching by _id
-            elif _id:
-                # query = {"_id": _id}
-                item_found = UsuarioModel.user_in_database(
-                    data_response=ITEMS, user_id=_id)
-                # When the item is inside the collection
-                if item_found:
-                    # Mongoclient
-                    db_conn = ConexionMongo.create_conexion("local")
-                    _id = db_conn.delete_one({'_id': ObjectId(_id)})
-                    # Tests
-                    assert _id.acknowledged
-                    # if the deletion was succeeded the count is >0
-                    return _id.deleted_count
-                else:
-                    return make_response(
-                        "{_id} nao encontrado".format(_id=_id), 404
-                    )
-            else:
-                return make_response(
-                    "Nome ou _id sao requeridos", 400
-                )
+                    return user_deleted
         except Exception as e:
+            print(f"Delete failed {e}")
             return make_response(
                 "usuario nao foi apagado", 403
             )

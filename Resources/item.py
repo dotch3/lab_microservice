@@ -17,8 +17,10 @@ class Item(Resource):
         itemmodel_obj = ItemModel()
         res_docu = itemmodel_obj.get_item(nome=nome)
         # Checking the response from the Model
-        if ObjectId.is_valid(res_docu["_id"]):
+        if "ObjectId" in str(type(res_docu)) or "dict" in str(type(res_docu)):
             print("The object is a BSON")
             return make_response(
                 "item encontrado com sucesso", 200
             )
+        else:
+            return make_response("item no existe na collection", 404)

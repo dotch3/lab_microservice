@@ -1,0 +1,339 @@
+[{
+  "_id": {
+    "$oid": "5ec58b01814de331a3c32279"
+  },
+  "﻿username": "jmercado",
+  "password": "test2020",
+  "nome": "Jorgito",
+  "sobrenome": "Mercado",
+  "address": "av.Guarapiranga",
+  "celular": "11973141485",
+  "tipo_usuario": "Proprietario"
+},{
+  "_id": {
+    "$oid": "5ec58b01814de331a3c3227a"
+  },
+  "﻿username": "hgoes",
+  "password": "test2021",
+  "nome": "Henrique",
+  "sobrenome": "Goes",
+  "address": "av.pertodeCasa",
+  "celular": "11928282825",
+  "tipo_usuario": "Proprietario"
+},{
+  "_id": {
+    "$oid": "5ec58b01814de331a3c3227b"
+  },
+  "﻿username": "rsantos",
+  "password": "test2022",
+  "nome": "Reinaldo",
+  "sobrenome": "Santos",
+  "address": "av.RuaLivre",
+  "celular": "11828282824",
+  "tipo_usuario": "Proprietario"
+},{
+  "_id": {
+    "$oid": "5ec58b01814de331a3c3227c"
+  },
+  "﻿username": "jsilva",
+  "password": "test2023",
+  "nome": "Joao",
+  "sobrenome": "Silva",
+  "address": "av.evergreen",
+  "celular": "11626288822",
+  "tipo_usuario": "Solicitante"
+},{
+  "_id": {
+    "$oid": "5ec58b01814de331a3c3227d"
+  },
+  "﻿username": "msoares",
+  "password": "test2024",
+  "nome": "Marcos",
+  "sobrenome": "Soares",
+  "address": "av.Free",
+  "celular": "",
+  "tipo_usuario": "Solicitante"
+},{
+  "_id": {
+    "$oid": "5ec58b01814de331a3c3227e"
+  },
+  "﻿username": "edson",
+  "password": "test2025",
+  "nome": "Edson",
+  "sobrenome": "",
+  "address": "",
+  "celular": "",
+  "tipo_usuario": "Solicitante"
+},{
+  "_id": {
+    "$oid": "5ec58b01814de331a3c3227f"
+  },
+  "﻿username": "lmorais",
+  "password": "test2026",
+  "nome": "Liliana",
+  "sobrenome": "Morais",
+  "address": "",
+  "celular": "",
+  "tipo_usuario": "Solicitante"
+},{
+  "_id": {
+    "$oid": "5ec6b8aa577cfa8540be3e53"
+  },
+  "nome": "jorgex989817",
+  "sobrenome": "Silva989829",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988989831"
+},{
+  "_id": {
+    "$oid": "5ec6bca0c2e82e79ecd4268e"
+  },
+  "nome": "jorgex2920892",
+  "sobrenome": "Silva920902",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988920904"
+},{
+  "_id": {
+    "$oid": "5ec6bd2bfa206b1e6c28b6eb"
+  },
+  "nome": "jorgex2222276723",
+  "sobrenome": "Silva276735",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988276738"
+},{
+  "_id": {
+    "$oid": "5ec6bdab56bc2a7d344f8a5d"
+  },
+  "nome": "jorgex697722",
+  "sobrenome": "Silva697749",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988697753"
+},{
+  "_id": {
+    "$oid": "5ec6be4267fe36b47eba6d91"
+  },
+  "nome": "jorgex239959",
+  "sobrenome": "Silva239968",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988239971"
+},{
+  "_id": {
+    "$oid": "5ec6be803bd4052d67acdc18"
+  },
+  "nome": "jorgex655293",
+  "sobrenome": "Silva655303",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988655306"
+},{
+  "_id": {
+    "$oid": "5ec6be8cfb8547fb03900881"
+  },
+  "nome": "jorgex256118",
+  "sobrenome": "Silva256145",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988256150"
+},{
+  "_id": {
+    "$oid": "5ec6bea321105e58e35bdc61"
+  },
+  "nome": "jorgex672319",
+  "sobrenome": "Silva672328",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988672331"
+},{
+  "_id": {
+    "$oid": "5ec6bf21cb3fa7c0ec63901f"
+  },
+  "nome": "jorgex192448",
+  "sobrenome": "Silva192461",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988192465"
+},{
+  "_id": {
+    "$oid": "5ec6bf34c1907e572610f046"
+  },
+  "nome": "jorgex447788",
+  "sobrenome": "Silva447803",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988447807"
+},{
+  "_id": {
+    "$oid": "5ec6bf497272280eb7da4bcf"
+  },
+  "nome": "jorgito439273",
+  "sobrenome": "Silva439289",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988439293"
+},{
+  "_id": {
+    "$oid": "5ec6c11669441074dd025f1d"
+  },
+  "nome": "joao880301",
+  "sobrenome": "Silva880310",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988880314"
+},{
+  "_id": {
+    "$oid": "5ec6c1f3ba86a285e10975bd"
+  },
+  "nome": "joao362805",
+  "sobrenome": "Silva362814",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988362816"
+},{
+  "_id": {
+    "$oid": "5ec6c220431ac367c1a31735"
+  },
+  "nome": "joao169088",
+  "sobrenome": "Silva169099",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988169101"
+},{
+  "_id": {
+    "$oid": "5ec6c24114cd5be8bd56cb89"
+  },
+  "nome": "joao92745",
+  "sobrenome": "Silva92758",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "1198892761"
+},{
+  "_id": {
+    "$oid": "5ec6c319a922b2fb69760715"
+  },
+  "nome": "joao987246",
+  "sobrenome": "Silva987258",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988987260"
+},{
+  "_id": {
+    "$oid": "5ec6c371c4d9aa0fce68b860"
+  },
+  "nome": "joao40348",
+  "sobrenome": "Silva40356",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "1198840358"
+},{
+  "_id": {
+    "$oid": "5ec6caf11a3543efd1e5d574"
+  },
+  "nome": "Edson2",
+  "sobrenome": "Silva164375",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988164410"
+},{
+  "_id": {
+    "$oid": "5ec6cb681a3543efd1e5d578"
+  },
+  "nome": "Edson10",
+  "sobrenome": "Silva765445",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988765453"
+},{
+  "_id": {
+    "$oid": "5ec6cbd58a3af30b87f282f0"
+  },
+  "nome": "Edson11",
+  "sobrenome": "Silva45315",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "1198845327"
+},{
+  "_id": {
+    "$oid": "5ec6cd2ae133546b74866aa5"
+  },
+  "nome": "Edson12",
+  "sobrenome": "Silva247012",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988247020"
+},{
+  "_id": {
+    "$oid": "5ec6cdb174297dc5c34cd3f2"
+  },
+  "nome": "Edson13",
+  "sobrenome": "Silva29074",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "1198829086"
+},{
+  "_id": {
+    "$oid": "5ec6cdcd750e35e57e7bd1b2"
+  },
+  "nome": "Edson14",
+  "sobrenome": "Silva925596",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988925605"
+},{
+  "_id": {
+    "$oid": "5ec6cff05166dd2fd0a835ab"
+  },
+  "nome": "jorgito10",
+  "sobrenome": "Silva153429",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988153438"
+},{
+  "_id": {
+    "$oid": "5ec6ebfe69ee0ddd8088a495"
+  },
+  "nome": "ffff",
+  "sobrenome": "Silva880860",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988880867"
+},{
+  "_id": {
+    "$oid": "5ec75cce10c0ea1f14cff473"
+  },
+  "nome": "juancito",
+  "sobrenome": "Silva41372",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "1198841380"
+},{
+  "_id": {
+    "$oid": "5ec75ce310c0ea1f14cff477"
+  },
+  "nome": "juancito2",
+  "sobrenome": "Silva440151",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988440159"
+},{
+  "_id": {
+    "$oid": "5ec777afa5cea299d8721d08"
+  },
+  "nome": "maria3",
+  "sobrenome": "Silva562667",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988562676"
+},{
+  "_id": {
+    "$oid": "5ec777cba5cea299d8721d0e"
+  },
+  "nome": "maria5",
+  "sobrenome": "Silva379463",
+  "address": "av.Testingfying",
+  "password": "test2020",
+  "celular": "11988379471"
+}]

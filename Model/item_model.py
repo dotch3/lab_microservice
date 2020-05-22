@@ -5,6 +5,7 @@ from Model.mongo_conexion import ConexionMongo
 class ItemModel:
     collection = "items"
     db_inst = "local"
+
     def __init__(self, item_id=None, nome=None, descricao=None, data_inicio=None, data_final=None, status=None):
         self.item_id = item_id
         self.nome = nome
@@ -29,24 +30,21 @@ class ItemModel:
         :param nome: The nome of the item to find
         :return: a dictionary
         """
-        # Getting all the data from the "usuarios" collection
+        # Getting all the data from the "items" collection
         print(f"looking for {nome}")
-        # Will get an object BSON if item is found
+        # Will get an object BSON if item is find
 
         # Using the jsonify thing:
         data_found = ConexionMongo.get_dict_from_mongodb(db_inst=ItemModel.db_inst,
                                                          collection=ItemModel.collection, mode="get_one", nome=nome)
-        print(data_found)
         # Verifying if the _id obtained is an ObjectId valid
-        if data_found:
-            print("eureka! {}".format(data_found["_id"]))
-            return data_found  # return a dict
+
+        if "dict" in str(type(data_found)) or "ObjectId" in str(type(data_found)):
+            print("data found")
+            return data_found
         else:
-            print("Oops, the aliens again!")
-            abort(
-                404, "Item com nome {nome} nao encontrado".format(
-                    nome=nome)
-            )
+            return make_response(
+                "item  nao foi encontrado, documento inexistente", 404)
 
     @classmethod
     def create_item(cls, nome, descricao, data_inicio, data_final, status):
