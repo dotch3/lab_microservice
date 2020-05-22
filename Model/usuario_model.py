@@ -28,7 +28,8 @@ class UsuarioModel:
     def criar_proprietario(cls, nome=None, sobrenome=None, email=None, address=None, username=None, password=None,
                            celular=None):
         """
-        Class function following the "FABRIC" pattern, it will create a "usuario" object but with  "tipo_usaurio=proprietario"
+        Class function following the "FABRIC" pattern, it will create a "usuario" object but with
+        "tipo_usaurio=proprietario"
         :param nome: str Nome do usuario
         :param sobrenome: str o sobrenome do usuario
         :param email: email The email of the usuario
@@ -45,7 +46,8 @@ class UsuarioModel:
     def criar_solicitante(cls, nome=None, sobrenome=None, email=None, address=None, username=None, password=None,
                           celular=None):
         """
-        Class function following the "FABRIC" pattern, it will create a "usuario" object but with  "tipo_usaurio=solicitante"
+        Class function following the "FABRIC" pattern, it will create a "usuario" object but with
+        "tipo_usaurio=solicitante"
         :param nome: str Nome do usuario
         :param sobrenome: str o sobrenome do usuario
         :param email: email The email of the usuario
@@ -64,6 +66,7 @@ class UsuarioModel:
         This function will create a new Usuario of type "solicitante" and store it in the mongo database
         :param usuario: this is a dictionary with the data of the user
         """
+        print("NOVO SOLICITANTE")
         nome = usuario.get("nome", None)
         sobrenome = usuario.get("sobrenome", None)
         email = usuario.get("email", None)
@@ -72,18 +75,20 @@ class UsuarioModel:
         password = usuario.get("password", None)
         celular = usuario.get("celular", None)
 
-        # Criando a conexao e procurando se existe o usuario no banco
-        ITEMS = ConexionMongo.get_all_data(collection=UsuarioModel.collection)
-
         try:
-            data_found = UsuarioModel.user_in_database(data_response=ITEMS, nome=nome)
-            if not data_found:
+            print("TRY")
+            data_found = ConexionMongo.get_dict_from_mongodb(db_inst=UsuarioModel.db_inst,
+                                                             collection=UsuarioModel.collection, mode="get_one",
+                                                             nome=nome)
+            if not data_found:  # Data not found
+                # Preparing the user information, this should happening when data is retrieved from UI and pass
+                # through the system
                 # Creating the object UsuarioModel of type "solicitante"
                 # Fabric pattern applied here
                 new_user = UsuarioModel.criar_solicitante(
                     nome=nome, sobrenome=sobrenome, email=email, address=address, username=username, password=password,
                     celular=celular)
-                u = {
+                python_dict_usuario = {
                     "nome": new_user.nome,
                     "sobrenome": new_user.sobrenome,
                     "email": new_user.email,
@@ -92,19 +97,26 @@ class UsuarioModel:
                     "password": new_user.password,
                     "celular": new_user.celular,
                 }
-                # Connecting to the mongo
-                db_conn = ConexionMongo.create_conexion("local")
-                _id = db_conn[UsuarioModel.collection].insert_one(u)
-                # If the insert of the new document has been succeeded the _id.acknowledged TRUE is retrieve
-                return _id.inserted_id
-            else:
-                abort(
-                    401, "Usuario {nome} ja existe no banco de dados".format(
-                        nome=nome)
-                )
+
+                res_creation = ConexionMongo.add_document(db_inst=UsuarioModel.db_inst,
+                                                          collection=UsuarioModel.collection,
+                                                          python_dict=python_dict_usuario)
+                # res_creation.acknowledged  # <-- should return: True
+                # res_creation.inserted_id  # <--- returns a bson ObjectId
+
+                if res_creation.acknowledged and ObjectId.is_valid(res_creation.inserted_id):
+                    return make_response("Usuario {nome} criado com sucesso ".format(
+                        nome=nome), 201)
+
+
+            elif ObjectId.is_valid(data_found["_id"]):
+                print("The object exists")
+                return make_response("{nome} ja existe na collection {collection}, nao se criara o usuario".format(
+                    nome=nome, collection=UsuarioModel.collection), 401)
         except Exception as e:
+            print("Error criando o novo usuario: {}".format(e))
             return make_response(
-                "usuario nao foi criado", 406
+                "usuario nao foi criado", 500
             )
 
     @staticmethod

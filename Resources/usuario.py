@@ -38,15 +38,19 @@ class Usuario(Resource):
         # if the HTTP code or messages are not the expected
         #  Based on the type of object retrieved. <ObjectId =MongoDB response of _id created>,
         #  <flask.wrappers.Response = Response retrieved>
+        # abort(
+        #     401, "Usuario {nome} ja existe no banco de dados".format(
+        #         nome=nome)
+        # )
         if "flask.wrappers.Response" in str(type(res_user_post)):
-            if res_user_post.status_code < 300 or "usuario nao foi criado" not in str(res_user_post.get_data()):
+            if res_user_post.status_code < 300 or "nao se criara o usuario" not in str(res_user_post.get_data()):
                 return make_response("usuario criado com sucesso", 200)
             else:
                 return make_response(
                     "usuario  nao foi criado", res_user_post.status_code)
         elif "ObjectId" in str(type(res_user_post)):
             return make_response(
-                "usuario  criado com sucesso", 200
+                "usuario  usuario.get('nome') criado com sucesso", 200
             )
 
     def delete(self, nome=None, _id=None):

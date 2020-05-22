@@ -102,12 +102,13 @@ class ConexionMongo:
 
         elif mode == "get_one":
             print("get_dict_from_mongodb::get_one")
+            print(nome)
             try:
                 # Searching by nome
-                print("try")
-                if nome and not _id:
+                if nome and _id == None:
                     print("by nome")
                     query = {"nome": nome}
+                    print(query)
                     items_db = mongo_conn[collection].find_one(query)
                     print(type(items_db))
                     print("Encontrou o documento {}...enviando...".format(items_db["_id"]))
@@ -134,6 +135,38 @@ class ConexionMongo:
                             _id=_id), 404)
             except Exception as e:
                 print(f"ERROR MONGO:  get_dict_from_mongodb::get_one {e}")
+        elif mode == "create":
+            print("get_dict_from_mongodb::create")
+            try:
+                # Searching by nome
+                if nome and _id == None:
+                    print("by nome")
+                    query = {"nome": nome}
+                    print(query)
+                    items_db = mongo_conn[collection].find_one(query)
+                    if items_db:
+                        return items_db["_id"]
+                    else:
+                        return False
+            except Exception as e:
+                print(f"ERROR MONGO:  get_dict_from_mongodb::create {e}")
+
+    @classmethod
+    def add_document(cls, db_inst, collection, python_dict):
+        """
+        This will add a new document to the collection
+        :param db_inst: the local or remote database
+        :param collection: the mongodb collection where to add the document
+        :param python_dict: The python dictionary object to be added as mongo document
+        :return: InsertOneResult a mongo result
+        """
+        try:
+            print("creating document")
+            mongo_conn = ConexionMongo.create_conexion(db_inst)
+            result_object = mongo_conn[collection].insert_one(python_dict)
+            return result_object
+        except Exception as e:
+            print(f"ERROR MONGO:  create_document  {e}")
 
     @classmethod
     def read_one(cls, db_inst, collection, item_name):

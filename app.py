@@ -42,7 +42,7 @@ api.add_resource(UsuarioList, '/api/usuarios')
 
 @ app_flask.route('/home', methods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'])
 def home():
-    return render_template('usuarios.html')
+    return render_template('index.html')
 
 
 @ app_flask.route('/api/items', methods=['GET'])
