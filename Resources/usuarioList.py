@@ -2,6 +2,7 @@
 from Model.usuario_model import UsuarioModel
 from flask_restx import Resource
 
+
 class UsuarioList(Resource):
 
     def get(self):

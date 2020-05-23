@@ -1,6 +1,6 @@
-from boavizinhanca_microservice.Model.mongo_conexion import ConexionMongo
+from Model.mongo_conexion import ConexionMongo
 
-
+# @TODO not part of MVP
 class Proposta:
     def __init__(self, proposta_id, nome, descricao, item, solicitante, proprietario):
         self.proposta_id = proposta_id

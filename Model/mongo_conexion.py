@@ -24,7 +24,7 @@ class ConexionMongo:
         print("create_conexion")
         mongo_client = ""
         if db_inst == "local":
-            mongo_client = MongoClient("mongodb://localhost:27017/")  # Local
+            mongo_client = MongoClient("mongodb://127.0.0.1:27017/")  # Local
         elif db_inst == "docker":
             mongo_client = "other config-maybe"  # Docker
         db_conn = mongo_client[db_inst]
@@ -194,17 +194,12 @@ class ConexionMongo:
             # # dict object with more info on API call
             # print ("raw_result:", result.raw_result)
             if "None" not in str(type(result)):
-                print("mongo check results")
-                print(result.raw_result)
+                print("mongo check results:", result.raw_result)
                 if result.modified_count > 0:
                     print("documento atualizado ")
-                    return result
                 else:
                     print("not found/updated")
-                    return False
-            else:
-                print("not found")
-                return False
+            return result
 
         except Exception as e:
             print(f"ERROR MONGO:  update_document  {e}")
@@ -225,13 +220,18 @@ class ConexionMongo:
             print("deleting document ")
             mongo_conn = ConexionMongo.create_conexion(db_inst)
             result = mongo_conn[collection].find_one_and_delete(query)
-
+            # when is not find and deleted , the response is None
+            # When find and deleted, the response is a
+            # {'_id': ObjectId('5ec6ebfe69ee0ddd8088a495'), 'nome': '
+            # ObjectId -> result["_id"]) = 5ec6ebfe69ee0ddd8088a495
+            print("Mongo DeleteResult")
+            print("class",type(result),"value ", str(result))
             if "None" not in str(result):
                 if ObjectId.is_valid(result["_id"]):
-                    print("documento eliminado " + str(result["_id"]))
-                    return result
+                    print("document deleted " + str(result["_id"]))
             else:
-                return False
+                print("not deleted returning None")
+            return result
         except Exception as e:
             print(f"ERROR MONGO:  remove_document  {e}")
 

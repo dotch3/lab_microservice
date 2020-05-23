@@ -20,7 +20,6 @@ class UsuarioModel:
         self.celular = celular
         self.tipo_usuario = tipo_usuario
 
-
     @classmethod
     def criar_solicitante(cls, nome=None, sobrenome=None, email=None, address=None, username=None, password=None,
                           celular=None):
@@ -58,8 +57,7 @@ class UsuarioModel:
         return UsuarioModel(nome=nome, sobrenome=sobrenome, email=email, address=address, username=username,
                             password=password, celular=celular, tipo_usuario=UsuarioModel.TYPES_USERS[1])
 
-    @staticmethod
-    def novo_solicitante(usuario):
+    def novo_solicitante(self, usuario):
         """
         This function will create a new Usuario of type "solicitante" and store it in the mongo database
         :param usuario: this is a dictionary with the data of the user
@@ -78,12 +76,7 @@ class UsuarioModel:
             data_found = ConexionMongo.get_dict_from_mongodb(db_inst=UsuarioModel.db_inst,
                                                              collection=UsuarioModel.collection, mode="create",
                                                              nome=nome)
-            print("data found?")
-            print(str(data_found))
-            print(type(data_found))
             if not data_found:  # Data not found
-                # Preparing the user information, this should happening when data is retrieved from UI and pass
-                # through the system
                 # Creating the object UsuarioModel of type "solicitante"
                 # Fabric pattern applied here
                 new_user = UsuarioModel.criar_solicitante(
@@ -119,8 +112,7 @@ class UsuarioModel:
                 "usuario nao foi criado, ja existe", 500
             )
 
-    @staticmethod
-    def get_all_items():
+    def get_all_items(self):
         """
         Function to call all the items of the "usuarios" collection
         :return: a jsonified dictionary of the usuarios
@@ -128,11 +120,10 @@ class UsuarioModel:
         # Getting all the data from the "usuarios" collection
         return ConexionMongo.get_all_data(collection=UsuarioModel.collection)
 
-    @staticmethod
-    def get_item(nome):
+    def get_usuario(self, nome):
         """
-        This will get an item from an collection
-        :param nome: The nome of the item to find
+        This will get an usuario from an collection
+        :param nome: The nome of the usuario to find
         :return: a dictionary
         """
         # Getting all the data from the "usuarios" collection
@@ -142,9 +133,6 @@ class UsuarioModel:
         # Using the jsonify thing:
         data_found = ConexionMongo.get_dict_from_mongodb(db_inst=UsuarioModel.db_inst,
                                                          collection=UsuarioModel.collection, mode="get_one", nome=nome)
-        print(data_found)
-
-        print(type(data_found))
         # Verifying if the _id obtained is an ObjectId valid
 
         if "dict" in str(type(data_found)) or "ObjectId" in str(type(data_found)):
@@ -153,8 +141,7 @@ class UsuarioModel:
             return make_response(
                 "usuario  nao foi encontrado, documento inexistente", 404)
 
-    @staticmethod
-    def update_user(nome, usuario_data):
+    def update_user(self, nome, usuario_data):
         """
         This will update a document type "Usuario" if found
         :param nome: the nome of the 'Usuario' document
@@ -178,14 +165,7 @@ class UsuarioModel:
                                                    collection=UsuarioModel.collection, query=query,
                                                    values_set=user_set_values)
             # Verifying the results obtained
-            if result.modified_count > 0:
-                print("Modified succeeded")
-                print(str(type(result.modified_count)))
-                print(result.modified_count)
-                return result # returning a positive value
-            else:
-                return make_response(
-                    "usuario  nao foi atualizado", 404)
+            return result
 
         except Exception as e:
             print("Error atualizando o  usuario: {}".format(e))
@@ -193,8 +173,7 @@ class UsuarioModel:
                 "usuario nao foi atualizado", 400
             )
 
-    @staticmethod
-    def delete_user(nome=None, _id=None):
+    def delete_user(self, nome=None, _id=None):
         """
         Will delete a document type "Usuario" if found
         :param nome: str The nome of the usuario to be removed
@@ -211,16 +190,7 @@ class UsuarioModel:
                 query = {"nome": nome}
                 result = ConexionMongo.remove_document(db_inst=UsuarioModel.db_inst, collection=UsuarioModel.collection,
                                                        query=query)
-                # Verifying the results obtained
-                if "dict" in str(type(result)) or "ObjectId" in str(type(result)):
-                    print("document deleted ")
-                    return result
-                else:
-                    print("user not found, returning False")
-                    return make_response(
-                        "usuario  nao foi deletado, documento inexistente", 404)
+                return result
         except Exception as e:
             print(f"Delete failed {e}")
-            return make_response(
-                "usuario nao foi apagado", 403
-            )
+            return e

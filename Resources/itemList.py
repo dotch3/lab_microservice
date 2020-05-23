@@ -10,6 +10,6 @@ class ItemList(Resource):
         Function to get  all the documents of type 'Item' from the mongoDB
         :return: list of documents <Item>
         """
-        items = ItemModel.get_all_items()
         print("items")
+        items = ItemModel.get_all_items(self)
         return items

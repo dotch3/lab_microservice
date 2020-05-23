@@ -1,8 +1,8 @@
-# This  will call the Usuario model
+# This  will call the Usuario
 from datetime import datetime
 from Model.usuario_model import UsuarioModel
 from flask_restx import Resource
-from flask import make_response, abort
+from flask import make_response, abort, json
 
 
 class Usuario(Resource):
@@ -18,10 +18,9 @@ class Usuario(Resource):
         """
         print("GET")
         usermodel_obj = UsuarioModel()
-        res_docu = usermodel_obj.get_item(nome=nome)
+        res_docu = usermodel_obj.get_usuario(nome=nome)
         # Checking the response from the Model
         if "ObjectId" in str(type(res_docu)) or "dict" in str(type(res_docu)):
-            print("The object is a BSON")
             if res_docu.get("nome") == nome:
                 return make_response(
                     "usuario encontrado com sucesso", 200
@@ -32,7 +31,7 @@ class Usuario(Resource):
                 )
 
         else:
-            return make_response("usuario no existe na collection", 404)
+            return make_response("usuario no existente", 404)
 
     def post(self, nome, sobrenome=None, email=None, address=None, password=None, username=None, celular=None):
         """
@@ -55,24 +54,18 @@ class Usuario(Resource):
             "address": "av.Testingfying",
             "password": "test2020",
             "username": "u_" + str(datetime.now().microsecond),
-            "celular": "11988" + str(datetime.now().microsecond)
+            "celular": "11988" + str(datetime.now().microsecond),
+            "last_update": str(datetime.now().strftime("%d-%m-%Y_%H_%M_%S"))
         }
-        user_obj = UsuarioModel()
-        res_user_post = user_obj.novo_solicitante(usuario=usuario)
-        # if the HTTP code or messages are not the expected
-        #  Based on the type of object retrieved. <ObjectId =MongoDB response of _id created>,
-        #  <flask.wrappers.Response = Response retrieved>
-        # abort(
-        #     401, "Usuario {nome} ja existe no banco de dados".format(
-        #         nome=nome)
-        # )
+        res_user_post = UsuarioModel.novo_solicitante(self, usuario=usuario)
         if "flask.wrappers.Response" in str(type(res_user_post)):
             if res_user_post.status_code < 300 or "nao se criara o usuario" not in str(res_user_post.get_data()):
                 return make_response("usuario criado com sucesso", 200)
             else:
                 return make_response(
-                    "usuario  {nome} nao foi criado, documento existente {code}".format(code=res_user_post.status_code,
-                                                                                        nome=usuario.get("nome")),
+                    "usuario  {nome} nao foi criado, documento ja existente {code}".format(
+                        code=res_user_post.status_code,
+                        nome=usuario.get("nome")),
                     res_user_post.status_code)
         elif "ObjectId" in str(type(res_user_post) or "dict" in str(type(res_user_post))):
             return make_response(
@@ -81,8 +74,8 @@ class Usuario(Resource):
 
     def put(self, nome, usuario=None):
         """
-        Function to update an existent document of type 'Usuario' base don nome keyword entered
-        :param nome: str The nome of  the document type 'Usuario' to be updated
+        Function to update an 'Usuario' object
+        :param nome: str The nome of  the 'Usuario' to be updated
         :param usuario: dictionary with the parameters to be used for the update of the document
         :return: dictionary 'Usuario' with new values
         """
@@ -99,31 +92,29 @@ class Usuario(Resource):
                 "tipo_usuario": "proprietario",
                 "last_update": str(datetime.now().strftime("%d-%m-%Y_%H_%M_%S"))
             }
-
         else:
-            print("data retrieved")
             usuario_data = usuario
 
         print(usuario_data)
-        res_user_updated = UsuarioModel.update_user(nome=nome, usuario_data=usuario_data)
-        print("resultado")
-        print(str(type(res_user_updated)))
-        if "None" not in str(type(usuario_data)):
-            if res_user_updated.modified_count > 0:
-                return make_response(
-                    " documento de usuario {nome} atualizado com sucesso ".format(nome=nome), 202
-                )
-            elif "flask.wrappers.Response" in str(type(res_user_updated)):
-                if res_user_updated.status_code != 400:
-                    abort(404, " documento de usuario {nome} nao foi encontrado".format(nome=nome))
+        res_user_updated = UsuarioModel.update_user(self, nome=nome, usuario_data=usuario_data)
+        # Working on the data retrieved
+        if res_user_updated:
+            data_json = json.dumps(res_user_updated.raw_result)
+            data_encoded = json.loads(data_json)
+            if data_encoded["updatedExisting"]:
+                if "None" not in str(type(usuario_data)):
+                    if "flask.wrappers.Response" in str(type(res_user_updated)):
+                        if res_user_updated.status_code != 400:
+                            abort(404, " documento de item {nome} nao foi encontrado".format(nome=nome))
+                    elif res_user_updated.modified_count > 0:
+                        return make_response(
+                            " documento de usuario {nome} atualizado com sucesso ".format(nome=nome), 202
+                        )
+            else:
+                abort(404, " documento de item {nome} nao foi encontrado".format(nome=nome))
         else:
             print("did not find the user")
             abort(400, " update do usuario {nome} nao e permitido, verifique seus dados".format(nome=nome))
-
-    # else:
-    #     abort(
-    #         404, "Pessoa com sobrenome {lname} nao encontrada".format(lname=lname)
-    #     )
 
     def delete(self, nome, _id=None):
         """
@@ -134,19 +125,18 @@ class Usuario(Resource):
         :return: A pymongo.results.DeleteResult object
         """
         print("DELETE")
-        user_obj = UsuarioModel()
-        res_user_delete = user_obj.delete_user(nome=nome, _id=_id)
+        res_user_delete = UsuarioModel.delete_user(self, nome=nome, _id=_id)
         # Checking the response from the Model
-        if "ObjectId" in str(type(res_user_delete)) or "dict" in str(type(res_user_delete)):
-            print("The object is a BSON")
-            if res_user_delete.get("nome") == nome:
+        if res_user_delete:
+            if "ObjectId" in str(type(res_user_delete)):
                 return make_response(
-                    " documento de usuario {nome} apagado com sucesso ".format(nome=nome), 202
+                    " documento de usuario {nome} apagado com sucesso, _id {_id} ".format(nome=nome,
+                                                                                          _id=res_user_delete["_id"]),
+                    202
                 )
             elif res_user_delete["nome"] == nome:
                 return make_response(
                     "documento de usuario {nome} apagado com sucesso ".format(nome=nome), 202)
-
         else:
             print("did not find the user")
             abort(404, " documento de usuario {nome} nao foi encontrado, verifique seus dados".format(nome=nome))

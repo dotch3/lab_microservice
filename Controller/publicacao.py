@@ -1,3 +1,4 @@
+# @TODO not part of MVP
 from Model.mongo_conexion import ConexionMongo
 
 
@@ -10,9 +11,9 @@ class Publicacao:
         self.proprietario = proprietario
         self.estado = estado
 
-    def get_publicacoes():
+    def get_publicacoes(self):
         # Connect database
-        conexion_db = ConexionMongo()
+        conexion_db = ConexionMongo(self)
         res = conexion_db.get_service(nome="Publicacoes")
         return res
 

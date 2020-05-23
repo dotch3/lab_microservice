@@ -1,6 +1,6 @@
 from Model.mongo_conexion import ConexionMongo
 
-
+# @TODO not part of MVP
 # Clase Negociacao realizado
 class Negociacao:
     TYPES = ("item", "service")

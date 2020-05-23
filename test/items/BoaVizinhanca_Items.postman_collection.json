@@ -1,0 +1,675 @@
+{
+	"info": {
+		"_postman_id": "53e9fa29-be3a-4196-9415-fdb73a8702b0",
+		"name": "BoaVizinhanca_Items",
+		"description": "Tests for the uService Items",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Items",
+			"item": [
+				{
+					"name": "getAllItems",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8314dc49-3271-4f2b-96eb-e0db75c0595d",
+								"exec": [
+									"",
+									"pm.test(\"status code is 200- pm.response\", function(){",
+									"   pm.response.to.have.status(200); ",
+									"});",
+									"",
+									"pm.test(\"The ID is an ObjectId\", function(){",
+									"  var usrs = pm.response.json();",
+									"console.log(usrs.length);",
+									"usr_id=usrs[0][0]",
+									"console.log(usr_id)",
+									"if (usr_id.length==24){",
+									"    return true;",
+									"}",
+									"else{",
+									"return false",
+									"}",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/items",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getItem",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa825085-70f8-4f3e-a969-bbc7c7e9d488",
+								"exec": [
+									"",
+									"pm.test(\"status code is 200- pm.response\", function(){",
+									"   pm.response.to.have.status(200); ",
+									"});",
+									"",
+									"pm.test(\"Item encontrado\", function () {",
+									"    pm.response.to.have.body(\"item encontrado com sucesso\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/item/furadeira",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"item",
+								"furadeira"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getItem(Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1144c265-45c1-4c7a-ae02-ffc60f94e250",
+								"exec": [
+									"",
+									"pm.test(\"Item invalido\", function () {",
+									"    pm.response.to.have.body(\"item nao existe na collection\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"404 expected\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400,401, 404]);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "84819aa6-880e-48e8-abe8-59e57af9b7a3",
+								"exec": [
+									"let invalidNomeItem= pm.variables.set(\"invalidNomeItem\",\"invalidNomeItem\")",
+									"",
+									"console.log(invalidNomeItem)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/item/{{invalidNomeItem}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"item",
+								"{{invalidNomeItem}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createItem",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0f16fc90-4f70-4643-9898-507642f63a85",
+								"exec": [
+									"",
+									"pm.test(\"Item created expected\", function () {",
+									"   pm.expect(pm.response.text()).to.include(\" criado com sucesso\");",
+									"});",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"// //Checking JSON data",
+									"",
+									"// nomeItemExpected=pm.collectionVariables.get(\"nomeUser\");",
+									"// pm.test(\"Data edited\", function () {",
+									"//     var jsonData = pm.response.json();",
+									"//     pm.expect(nome.value).to.eql(\"nomeItemExpected\");",
+									"// });",
+									"",
+									"",
+									"// // Checking if the value set is there",
+									"// var value = pm.variables.get(\"status\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "66bb23e3-0566-4b7d-8f02-b7533c740e76",
+								"exec": [
+									"//Setting environment variable",
+									"",
+									"",
+									"var today = new Date();",
+									"var time = today.getHours() + \"_\" + today.getMinutes() + \"_\" + today.getSeconds();",
+									"",
+									"console.log(time)",
+									"",
+									"var nomeItem= \"testItem\".concat(time)",
+									"console.log(\"NEW USER ITEM:\")",
+									"console.log(time)",
+									"pm.collectionVariables.set(\"nomeItem\", nomeItem);",
+									"",
+									"",
+									"let res=pm.collectionVariables.get(\"nomeItem\")",
+									"console.log(res)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data_final\": \"2020-05-30T10:53:53Z\",\n    \"data_inicio\": \"2020-05-13T10:53:53Z\",\n    \"descricao\": \"Martelo de borracha, tamano medio\",\n    \"nome\": \"marteloUpdated\",\n    \"status\": \"Emrestado\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/item/{{nomeItem}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"item",
+								"{{nomeItem}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createItem (Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "186f5722-5ef3-43a8-b244-8d7134186385",
+								"exec": [
+									"",
+									"pm.test(\"Error expected\", function () {",
+									"   pm.expect(pm.response.text()).to.include(\"nao foi criado\");",
+									"});",
+									"",
+									"pm.test(\"404 expected\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400,401, 403,404]);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9ec32251-cec0-4f51-9586-63f716080326",
+								"exec": [
+									"//Setting environment variable",
+									"",
+									"let res=pm.collectionVariables.get(\"nomeItem\")",
+									"console.log(res)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data_final\": \"2020-05-30T10:53:53Z\",\n    \"data_inicio\": \"2020-05-13T10:53:53Z\",\n    \"descricao\": \"Martelo de borracha, tamano medio\",\n    \"nome\": \"marteloUpdated\",\n    \"status\": \"Emrestado\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/item/{{nomeItem}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"item",
+								"{{nomeItem}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteItem",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a93b3ff9-f4e8-4b7d-b62d-2456e05f97ff",
+								"exec": [
+									"",
+									"pm.test(\"String expected\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\" apagado com sucesso\");",
+									"});",
+									"",
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \n            \"data_final\": \"2020-05-30T10:53:53Z\",\n            \"data_inicio\": \"2020-05-13T10:53:53Z\",\n            \"descricao\": \"Martelo de borracha, tamano medio\",\n            \"nome\": \"marteloUpdated\",\n            \"status\": \"Emrestado\"\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/item/{{nomeItem}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"item",
+								"{{nomeItem}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteItem (Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "de5250fd-b8ca-47d0-ba66-56a509b380d0",
+								"exec": [
+									"",
+									"pm.test(\"String expected\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"nao foi encontrado, verifique seus dados\");",
+									"});",
+									"",
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \n            \"data_final\": \"2020-05-30T10:53:53Z\",\n            \"data_inicio\": \"2020-05-13T10:53:53Z\",\n            \"descricao\": \"Martelo de borracha, tamano medio\",\n            \"nome\": \"marteloUpdated\",\n            \"status\": \"Emrestado\"\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/item/{{invalidNomeItem}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"item",
+								"{{invalidNomeItem}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createItem 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8a5ab9f-3f09-4a69-8876-6e2d809a0e54",
+								"exec": [
+									"",
+									"pm.test(\"Item created expected\", function () {",
+									"   pm.expect(pm.response.text()).to.include(\" criado com sucesso\");",
+									"});",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"// //Checking JSON data",
+									"",
+									"// nomeItemExpected=pm.collectionVariables.get(\"nomeUser\");",
+									"// pm.test(\"Data edited\", function () {",
+									"//     var jsonData = pm.response.json();",
+									"//     pm.expect(nome.value).to.eql(\"nomeItemExpected\");",
+									"// });",
+									"",
+									"",
+									"// // Checking if the value set is there",
+									"// var value = pm.variables.get(\"status\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2e3f3446-6ee7-4a1d-a866-8c3474b3b643",
+								"exec": [
+									"//Setting environment variable",
+									"",
+									"",
+									"var today = new Date();",
+									"var time = today.getHours() + \"_\" + today.getMinutes() + \"_\" + today.getSeconds();",
+									"",
+									"console.log(time)",
+									"",
+									"var nomeItem= \"testItem\".concat(time)",
+									"console.log(\"NEW USER ITEM:\")",
+									"console.log(time)",
+									"pm.collectionVariables.set(\"nomeItem\", nomeItem);",
+									"",
+									"",
+									"let res=pm.collectionVariables.get(\"nomeItem\")",
+									"console.log(res)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data_final\": \"2020-05-30T10:53:53Z\",\n    \"data_inicio\": \"2020-05-13T10:53:53Z\",\n    \"descricao\": \"Martelo de borracha, tamano medio\",\n    \"nome\": \"marteloUpdated\",\n    \"status\": \"Emrestado\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/item/{{nomeItem}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"item",
+								"{{nomeItem}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editItem",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4122976d-2ac8-46b6-aaca-aab5bfc1d3d0",
+								"exec": [
+									"",
+									"pm.test(\"status code is 200- pm.response\", function(){",
+									"   pm.response.to.have.status(202); ",
+									"});",
+									"",
+									"pm.test(\"String expected\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\" atualizado com sucesso\");",
+									"});",
+									"",
+									"",
+									"// Checking if the value set is there",
+									"var value = pm.variables.get(\"status\");",
+									"",
+									"// pm.test(\"Data edited\", function () {",
+									"//     var jsonData = pm.response.json();",
+									"//     pm.expect(status.value).to.eql(\"Emprestado\");",
+									"// });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"Emprestado\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/item/{{nomeItem}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"item",
+								"{{nomeItem}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editItem (Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "da3ad246-55ff-4c4f-b562-9224f9b0014a",
+								"exec": [
+									"",
+									"pm.test(\"status code is 200- pm.response\", function(){",
+									"   pm.response.to.have.status(404); ",
+									"});",
+									"",
+									"pm.test(\"String expected\", function () {",
+									"   pm.expect(pm.response.text()).to.include(\"nao foi encontrado\");",
+									"});",
+									"",
+									"",
+									"// Checking if the value set is there",
+									"var value = pm.variables.get(\"status\");",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "99826e2d-82fd-48e4-9f3c-a2b0c74e232a",
+								"exec": [
+									"let invalidNomeItem= pm.variables.set(\"invalidNomeItem\",\"invalidNomeItem\")",
+									"",
+									"console.log(invalidNomeItem)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"Emprestado\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/item/{{invalidNomeItem}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"item",
+								"{{invalidNomeItem}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"variable": [
+		{
+			"id": "9982eeb9-7e40-4572-a46c-61d654a3067a",
+			"key": "nomeItem",
+			"value": "testItem19_7_31",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

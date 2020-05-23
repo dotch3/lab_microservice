@@ -1,0 +1,671 @@
+{
+	"info": {
+		"_postman_id": "87af602f-043d-4332-9a8e-60187153af9b",
+		"name": "BoaVizinhanca_Usuarios",
+		"description": "API healthCheck for uServices usuarios",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "getAllUsers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "880668f6-b834-4264-8d71-fe88da8b798c",
+								"exec": [
+									"",
+									"pm.test(\"status code is 200- pm.response\", function(){",
+									"   pm.response.to.have.status(200); ",
+									"});",
+									"",
+									"pm.test(\"The ID is an ObjectId\", function(){",
+									"  var usrs = pm.response.json();",
+									"console.log(usrs.length);",
+									"usr_id=usrs[0][0]",
+									"console.log(usr_id)",
+									"if (usr_id.length==24){",
+									"    return true;",
+									"}",
+									"else{",
+									"return false",
+									"}",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuarios",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6fe7dd6f-0216-4726-ac1a-66dbe489bf4e",
+								"exec": [
+									"pm.test(\"200 - ok\", function(){",
+									"   pm.response.to.have.status(200); ",
+									"});",
+									"",
+									"pm.test(\"Usuario encontrado\", function () {",
+									"    pm.response.to.have.body(\"usuario encontrado com sucesso\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuario/Jorgito",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuario",
+								"Jorgito"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUser(Negative)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5e07ee6e-e310-4a09-af63-9e004cbd1450",
+								"exec": [
+									"let invalidNomeItem= pm.variables.set(\"invalidUserNome\",\"invalidUserNome\")",
+									"",
+									"console.log(invalidNomeItem)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a28b6f4c-843f-4b36-8ea2-b01f12c4daf7",
+								"exec": [
+									"pm.test(\"404 - not found\", function(){",
+									"   pm.response.to.have.status(404); ",
+									"});",
+									"",
+									"pm.test(\"Usuario encontrado\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"usuario no existe\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuario/{{invalidUserNome}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuario",
+								"{{invalidUserNome}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "738efc67-91c0-4490-b18a-12094abb771d",
+								"exec": [
+									"",
+									"pm.test(\"status code is 200- pm.response\", function(){",
+									"   pm.response.to.have.status(200); ",
+									"});",
+									"",
+									"pm.test(\"User Created\", function () {",
+									"    pm.response.to.have.body(\"usuario criado com sucesso\");",
+									"});",
+									"",
+									"",
+									"// // Checking if the value set is there",
+									"// var value = pm.variables.get(\"status\");",
+									"",
+									"// nomeExpected=pm.collectionVariables.get(\"nomeUser\");",
+									"",
+									"// pm.test(\"Data edited\", function () {",
+									"//     var jsonData = pm.response.json();",
+									"//     pm.expect(nome.value).to.eql(\"nomeExpected\");",
+									"// });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5eca04d7-4cbb-4fc9-96bc-1c5325e67c55",
+								"exec": [
+									"//Setting environment variable",
+									"",
+									"",
+									"var today = new Date();",
+									"var time = today.getHours() + \"_\" + today.getMinutes() + \"_\" + today.getSeconds();",
+									"",
+									"console.log(time)",
+									"",
+									"var nomeUser= \"test\".concat(time)",
+									"console.log(\"NEW USER NAME:\")",
+									"console.log(time)",
+									"pm.collectionVariables.set(\"nomeUser\", nomeUser);",
+									"",
+									"",
+									"let res=pm.collectionVariables.get(\"nomeUser\")",
+									"console.log(res)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"av.Guarapiranga 21500\",\n    \"celular\": \"11973141485\",\n    \"password\": \"test2020\",\n    \"sobrenome\": \"Doe\",\n    \"tipo_usuario\": \"Proprietario\",\n    \"username\": \"jpost\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuario/{{nomeUser}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuario",
+								"{{nomeUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createUser(Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c2083fd7-6df5-461a-ae91-e4a1f8db8f9b",
+								"exec": [
+									"",
+									"pm.test(\"status code 401UNAUTHORIZED\", function(){",
+									"   pm.response.to.have.status(401); ",
+									"});",
+									"",
+									"pm.test(\"Not created and has the text\", function () {",
+									"     pm.expect(pm.response.text()).to.include(\"documento ja existente\");",
+									"});",
+									"",
+									"",
+									"// Checking if the value set is there",
+									"var value = pm.variables.get(\"status\");",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"av.Guarapiranga 21500\",\n    \"celular\": \"11973141485\",\n    \"password\": \"test2020\",\n    \"sobrenome\": \"Doe\",\n    \"tipo_usuario\": \"Proprietario\",\n    \"username\": \"jpost\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuario/{{nomeUser}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuario",
+								"{{nomeUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86c3c57b-7ddc-4c09-bbdd-823b12184d01",
+								"exec": [
+									"",
+									"pm.test(\"202 - ok\", function(){",
+									"   pm.response.to.have.status(202); ",
+									"});",
+									"",
+									"pm.test(\"Usuario  atualizado\", function () {",
+									"   pm.expect(pm.response.text()).to.include(\"atualizado com sucesso\");",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"PostmanTest\",\n    \"sobrenome\": \"Updating\",\n    \"email\": \"test@updating.org\",\n    \"address\": \"av.TestingfyingUPDATE\",\n    \"username\": \"u_357641\",\n    \"password\": \"TestUpdate\",\n    \"celular\": \"11988357643\",\n    \"tipo_usuario\":\"solicitante\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuario/{{nomeUser}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuario",
+								"{{nomeUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editUser(Negative)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "43cca102-bf87-445e-891e-469ab3221f94",
+								"exec": [
+									"pm.collectionVariables.set(\"invalidUser\", \"invalidUser\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "00a86b72-a6f7-42b0-a862-ac941a40f59a",
+								"exec": [
+									"let invalid_user=pm.collectionVariables.get(\"invalidUser\");",
+									"",
+									"",
+									"",
+									"pm.test(\"not found\", function(){",
+									"   pm.response.to.have.status(404); ",
+									"});",
+									"",
+									"pm.test(\"Usuario  atualizado\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"nao foi encontrado\");",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"PostmanTest\",\n    \"sobrenome\": \"Updating\",\n    \"email\": \"test@updating.org\",\n    \"address\": \"av.TestingfyingUPDATE\",\n    \"username\": \"u_357641\",\n    \"password\": \"TestUpdate\",\n    \"celular\": \"11988357643\",\n    \"tipo_usuario\":\"solicitante\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuario/{{invalidUser}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuario",
+								"{{invalidUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createUser 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "46341822-90d7-4723-a958-68f9facba4ee",
+								"exec": [
+									"",
+									"pm.test(\"status code is 200- pm.response\", function(){",
+									"   pm.response.to.have.status(200); ",
+									"});",
+									"",
+									"pm.test(\"User Created\", function () {",
+									"    pm.response.to.have.body(\"usuario criado com sucesso\");",
+									"});",
+									"",
+									"",
+									"// // Checking if the value set is there",
+									"// var value = pm.variables.get(\"status\");",
+									"",
+									"// nomeExpected=pm.collectionVariables.get(\"nomeUser\");",
+									"",
+									"// pm.test(\"Data edited\", function () {",
+									"//     var jsonData = pm.response.json();",
+									"//     pm.expect(nome.value).to.eql(\"nomeExpected\");",
+									"// });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "62ba2fda-138e-4da0-b6eb-40bfeb29363e",
+								"exec": [
+									"//Setting environment variable",
+									"",
+									"",
+									"var today = new Date();",
+									"var time = today.getHours() + \"_\" + today.getMinutes() + \"_\" + today.getSeconds();",
+									"",
+									"console.log(time)",
+									"",
+									"var nomeUser= \"test\".concat(time)",
+									"console.log(\"NEW USER NAME:\")",
+									"console.log(time)",
+									"pm.collectionVariables.set(\"nomeUser\", nomeUser);",
+									"",
+									"",
+									"let res=pm.collectionVariables.get(\"nomeUser\")",
+									"console.log(res)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"av.Guarapiranga 21500\",\n    \"celular\": \"11973141485\",\n    \"password\": \"test2020\",\n    \"sobrenome\": \"Doe\",\n    \"tipo_usuario\": \"Proprietario\",\n    \"username\": \"jpost\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuario/{{nomeUser}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuario",
+								"{{nomeUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ac497b67-fbe8-4eb2-8d44-8f5e4099047d",
+								"exec": [
+									"",
+									"let userToRemove=pm.collectionVariables.get(\"nomeUser\");",
+									"",
+									"console.log(userToRemove)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "2da44b2b-78b4-425e-9a82-6045c150447c",
+								"exec": [
+									"pm.test(\"202 - ok\", function(){",
+									"   pm.response.to.have.status(202); ",
+									"});",
+									"",
+									"pm.test(\"Usuario  atualizado\", function () {",
+									"   pm.expect(pm.response.text()).to.include(\"apagado com sucesso\");",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuario/{{nomeUser}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuario",
+								"{{nomeUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser(Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "53b28c65-5ab4-4a2d-8a76-f76c79a07608",
+								"exec": [
+									"",
+									"",
+									"pm.test(\"404NOT FOUND\", function(){",
+									"   pm.response.to.have.status(404); ",
+									"});",
+									"",
+									"pm.test(\"Message expected\", function () {",
+									"   pm.expect(pm.response.text()).to.include(\"nao foi encontrado, verifique seus dados\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ENV}}:{{PORT}}/api/usuario/{{invalidUser}}",
+							"host": [
+								"{{ENV}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"usuario",
+								"{{invalidUser}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5e877f11-1579-45d4-aa99-1fab603a2455",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b3faf96e-8048-4bfb-9100-1c6894b65d03",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "3bba7334-1dd4-4e22-903b-44f7cad9503c",
+			"key": "nomeUser",
+			"value": "test19_8_2",
+			"type": "string"
+		},
+		{
+			"id": "c1c082a1-8637-4604-959a-bf030e178242",
+			"key": "nomeItem",
+			"value": "testItem18_50_49",
+			"type": "string"
+		},
+		{
+			"id": "9668d86c-dbf7-417f-9f45-c24b4bb09af8",
+			"key": "invalidUser",
+			"value": "invalidUser",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
