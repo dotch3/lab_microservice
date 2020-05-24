@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import make_response
 from Model.mongo_conexion import ConexionMongo
 from bson import ObjectId
@@ -154,6 +156,7 @@ class UsuarioModel:
         print("TRY ")
         try:
             query = {"nome": usuario_data.get("nome")}
+            last_update = str(datetime.now())
             user_set_values = {"$set": {
                 "sobrenome": usuario_data.get("sobrenome", None),
                 "email": usuario_data.get("email", None),
@@ -161,7 +164,7 @@ class UsuarioModel:
                 "username": usuario_data.get("username", None),
                 "password": usuario_data.get("password", None),
                 "tipo_usuario": usuario_data.get("tipo_usuario", None),
-                "last_update": usuario_data.get("last_update", None), }
+                "last_update": last_update}
             }
             result = ConexionMongo.update_document(db_inst=UsuarioModel.db_inst,
                                                    collection=UsuarioModel.collection, query=query,
@@ -184,10 +187,10 @@ class UsuarioModel:
         """
         # Checking if the user exists in the collection
         print(f"looking for {nome}")
-        user_deleted = False
         try:
             # Searching by nome
-            print("try")
+            print("try to delete:")
+            print(nome)
             if nome and not _id:
                 query = {"nome": nome}
                 result = ConexionMongo.remove_document(db_inst=UsuarioModel.db_inst, collection=UsuarioModel.collection,

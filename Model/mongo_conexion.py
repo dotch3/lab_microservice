@@ -240,6 +240,7 @@ class ConexionMongo:
 
         try:
             print("deleting document ")
+            print(query)
             mongo_conn = ConexionMongo.create_conexion(db_inst)
             result = mongo_conn[collection].find_one_and_delete(query)
             # when is not find and deleted , the response is None
@@ -248,7 +249,7 @@ class ConexionMongo:
             # ObjectId -> result["_id"]) = 5ec6ebfe69ee0ddd8088a495
             print("Mongo DeleteResult")
             print("class", type(result), "value ", str(result))
-            if "None" not in type(result):
+            if "None" not in str(type(result)):
                 if ObjectId.is_valid(result["_id"]):
                     print("document deleted " + str(result["_id"]))
             else:

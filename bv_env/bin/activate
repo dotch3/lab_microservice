@@ -44,10 +44,6 @@ _OLD_VIRTUAL_PATH="$PATH"
 PATH="$VIRTUAL_ENV/bin:$PATH"
 export PATH
 
-
-export PYTHONPATH="/Users/jmercado/Documents/FIAP Docus LOCAL/FIAP - SW Eng Dev/Laboratorios/Lab2_MicroServices/boavizinhanca_microservice/"
-
-
 # unset PYTHONHOME if set
 # this will fail if PYTHONHOME is set to the empty string (which is bad anyway)
 # could use `if (set -u; : $PYTHONHOME) ;` in bash

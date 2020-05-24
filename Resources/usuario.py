@@ -36,6 +36,8 @@ class Usuario(Resource):
     def post(self, usuario):
         """
         Function to create a new 'Usuario' (proprietario,solicitante), using the 'Factory'pattern
+        :param: usuario, json data with usuario properties
+        return: new usuario object
         """
         print("POST entrou!!!!")
         # For testing using this dict
@@ -93,18 +95,24 @@ class Usuario(Resource):
         :return: A pymongo.results.DeleteResult object
         """
         print("DELETE")
-        res_user_delete = UsuarioModel.delete_user(self, nome=usuario_data.get("nome"), _id=_id)
+        print(usuario_data)
+        res_user_delete = UsuarioModel.delete_user(self, nome=usuario_data, _id=_id)
+        print(res_user_delete)
+
         # Checking the response from the Model
         if res_user_delete:
             if "ObjectId" in str(type(res_user_delete)):
                 return make_response(
-                    " documento de usuario {nome} apagado com sucesso, _id {_id} ".format(nome=usuario_data.get("nome"),
-                                                                                          _id=res_user_delete["_id"]),
-                    202
+
                 )
             elif res_user_delete["nome"] == usuario_data:
                 return make_response(
-                    "documento de usuario {nome} apagado com sucesso ".format(nome=usuario_data.get("nome")), 202)
+                    "documento de usuario {nome} apagado com sucesso ".format(nome=usuario_data), 202)
+
+            elif res_user_delete["nome"] == usuario_data:
+                return make_response(
+                    "documento de usuario {nome} apagado com sucesso ".format(nome=usuario_data), 20)
         else:
             print("did not find the user")
-            abort(404, " documento de usuario {nome} nao foi encontrado, verifique seus dados".format(nome=usuario_data.get("nome")))
+            abort(404,
+                  " documento de usuario {nome} nao foi encontrado, verifique seus dados".format(nome=usuario_data))

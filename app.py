@@ -19,50 +19,10 @@ api = Api(app_flask,
 
 # Items
 api.add_resource(ItemList, '/api/items')
-api.add_resource(Item, '/api/item/<string:nome>')
+api.add_resource(Item, '/api/item<data>')
 
-# Users
-routes = [
-    '/api/usuario',
-    # '/api/item/update/<int:id>/<string:action>', # will need this for later - not MVP
-]
 api.add_resource(UsuarioList, '/api/usuarios')
 api.add_resource(Usuario, '/api/usuario<data>')
-
-
-# @TODO crear los demas recursos listados
-
-
-@app_flask.route('/api/usuario', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def crud_usuario():
-    print("entrou!")
-    if request.method == 'POST':
-        req_usuario = request.get_json()
-        print(req_usuario['nome'])
-
-        user = Usuario()
-        user.post(req_usuario)
-
-        print("Data result POST ", req_usuario)
-    elif request.method == 'GET':
-        req_usuario = request.get_json()
-        print(req_usuario['nome'])
-        user = Usuario()
-        user.get(req_usuario['nome'])
-        print("Data result GET ", req_usuario)
-    elif request.method == 'PUT':
-        req_usuario = request.get_json()
-        print(req_usuario['nome'])
-        user = Usuario()
-        user.put(req_usuario)
-        print("Data result PUT ", req_usuario)
-    elif request.method == 'DELETE':
-        req_usuario = request.get_json()
-
-        user = Usuario()
-        user.delete(req_usuario['nome'])
-
-    return render_template('index.html')
 
 
 @app_flask.route('/home')
@@ -72,26 +32,82 @@ def index():
     return render_template('index.html')
 
 
+@app_flask.route('/api/usuario', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def crud_usuario():
+    print("Checking the CRUD operations for items!")
+    if request.method == 'POST':
+        req_usuario = request.get_json()
+        user = Usuario()
+        user.post(req_usuario)
+        print("Data result POST ", req_usuario)
+
+    elif request.method == 'GET':
+        req_usuario = request.get_json()
+        print("GET", req_usuario['nome'])
+
+        user = Usuario()
+        user.get(req_usuario['nome'])
+        print("Data result GET ", req_usuario)
+
+    elif request.method == 'PUT':
+        req_usuario = request.get_json()
+        print("PUT", req_usuario['nome'])
+
+        user = Usuario()
+        user.put(req_usuario)
+
+
+    elif request.method == 'DELETE':
+        req_usuario = request.get_json()
+        print("DELETE", req_usuario['nome'])
+
+        user = Usuario()
+        user.delete(req_usuario['nome'])
+
+    return render_template('index.html')
+
+
+@app_flask.route('/api/item', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def crud_item():
+    print("Checking the CRUD operations for items!")
+    if request.method == 'POST':
+        req_item = request.get_json()
+        item = Item()
+        item.post(req_item)
+
+
+    elif request.method == 'GET':
+        req_item = request.get_json()
+        item = Item()
+        item.get(req_item['nome'])
+
+
+    elif request.method == 'PUT':
+        req_item = request.get_json()
+        item = Item()
+        item.put(req_item)
+
+
+    elif request.method == 'DELETE':
+        req_item = request.get_json()
+        item = Item()
+        item.delete(req_item['nome'])
+
+    return render_template('index.html')
+
 
 @app_flask.route('/api/items', methods=['GET'])
 def items():
     print("getting all items")
     return render_template('items.html')
-#
-#
-# @app_flask.route('/api/item/<string:nome>', methods=['GET', 'POST', 'PUT', 'DELETE'])
-# def item_nome():
-#     print("working with methods on Item object")
-#     return render_template('items.html')
 
-#
+
 @app_flask.route('/api/usuarios', methods=['GET'])
 def usuarios():
     print("getting all usuarios")
     return render_template('index.html')
 
 
-#
 # @app_flask.before_first_request
 # def create_collections():
 #     print("This function will run once")

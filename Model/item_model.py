@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import make_response
 from Model.mongo_conexion import ConexionMongo
 from bson import ObjectId
@@ -47,8 +49,8 @@ class ItemModel:
         else:
             return make_response(
                 "item  nao foi encontrado, documento inexistente", 404)
-
-    def novo_item(self, item):
+    @staticmethod
+    def novo_item( item):
         """
         Will create the new object Item using the data entered through the resource
         :param: dictionary with the item key:values
@@ -103,24 +105,25 @@ class ItemModel:
             "item nao foi criado, ja existe", 500
         )
 
-    def update_item(self, nome, item_data):
+    def update_item(self, item_data):
         """
         Will update the Item object
-        :param nome: the name of the object "Item"
         :param data_item: json The values that are being updated
         :return: a dictionary of the  Item object updated
         """
         print("TRY ")
+        print(item_data)
         try:
-            query = {"nome": nome}
+            query = {"nome": item_data.get("nome")}
+            last_update = str(datetime.now())
             item_set_values = {"$set": {
-                "nome": nome,
+                "nome": item_data.get("nome"),
                 "descricao": item_data.get("descricao"),
                 "data_inicio": item_data.get("data_inicio"),
                 "data_final": item_data.get("data_final"),
                 "status": item_data.get("status"),
                 "proprietario": item_data.get("proprietario"),
-                "last_update": item_data.get("last_update")}
+                "last_update": last_update}
             }
             result = ConexionMongo.update_document(db_inst=ItemModel.db_inst,
                                                    collection=ItemModel.collection, query=query,

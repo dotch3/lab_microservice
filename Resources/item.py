@@ -25,30 +25,17 @@ class Item(Resource):
         else:
             return make_response("item nao existe na collection", 404)
 
-    def post(self, nome, descricao=None, data_inicio=None, data_final=None, status=None, proprietario=None):
+    def post(self, item_data):
         """
         Function to create a new Item
-        :param nome: nome do item, which is unique
-        :param descricao: the description of the item
-        :param data_inicio: time the initial time that will be available
-        :param data_final:time the final time that will be available
-        :param status: str status of item
-        :return:
+        :param item_data: json with info of the new Item
+        :return: new Item
         """
         print("POST")
-        # For testing using this dict
-        item_data = {
-            "nome": nome,
-            "descricao": "Ferramenta Model:" + str(datetime.now().microsecond),
-            "data_inicio": str(datetime.now().microsecond),
-            "data_final": str(datetime.now().microsecond),
-            "status": "livre"
-        }
         # Sending the request for the creation
-        res_item_post = ItemModel.novo_item(self, item=item_data)
-        # Creation on mongo retuns the id of the object
+        res_item_post = ItemModel.novo_item(item_data)
+        # Creation on mongo returns the id of the object
         # Working on the results obtained by the model
-
         if res_item_post:
             # When created the return are: res_creation.acknowledged, res_creation.inserted_id
             #  objetcId 5ec98c03683d5e17ad4a668b
@@ -72,31 +59,16 @@ class Item(Resource):
         else:
             make_response("item  {nome} nao foi criado, verifique seus dados", 404)
 
-    def put(self, nome, item=None):
+    def put(self, item_data):
         """
         Function to get update an 'Item', it requires item's nome
-         :param nome: The name of the document type 'Item' to update
-        :param item: dictionary with the parameters to be used for the update of the document
+        :param item_data: dictionary with the parameters to be used for the update of the document
         :return: dictionary 'Usuario' with new values
         """
         print("PUT")
         # Using mocked data for testing purposes:
-        item_data = []
-        if not item:
-            print("none item retrieved , lets mockup it for tests")
-            item_data = {
-                "nome": nome,
-                "descricao": "Ferramenta Test Model" + str(datetime.now().microsecond),
-                "data_inicio": str(datetime.now()),
-                "data_final": str(datetime.now() + timedelta(days=10, hours=3)),
-                "status": "livre",
-                "proprietario": "",
-                "last_update": str(datetime.now().strftime("%d-%m-%Y_%H_%M_%S"))
-            }
 
-        else:
-            item_data = item
-        res_item_updated = ItemModel.update_item(self, nome=nome, item_data=item_data)
+        res_item_updated = ItemModel.update_item(self, item_data=item_data)
         print("resultado")
         # When updated or not, the result is:
         # <pymongo.results.UpdateResult object at 0x108f39b90>
@@ -109,13 +81,14 @@ class Item(Resource):
             data_encoded = json.loads(data_json)
             if data_encoded["updatedExisting"]:
                 return make_response(
-                    " Item: {nome} atualizado com sucesso ".format(nome=nome), 202
+                    " Item: {nome} atualizado com sucesso ".format(nome=item_data.get("nome")), 202
                 )
             else:
-                abort(404, " documento de item {nome} nao foi encontrado".format(nome=nome))
+                abort(404, " documento de item {nome} nao foi encontrado".format(nome=item_data.get("nome")))
         else:
             print("item not found")
-            abort(400, " update do item {nome} nao e permitido, verifique seus dados".format(nome=nome))
+            abort(400,
+                  " update do item {nome} nao e permitido, verifique seus dados".format(nome=item_data.get("nome")))
 
     def delete(self, nome, _id=None):
         """
