@@ -57,12 +57,14 @@ class UsuarioModel:
         return UsuarioModel(nome=nome, sobrenome=sobrenome, email=email, address=address, username=username,
                             password=password, celular=celular, tipo_usuario=UsuarioModel.TYPES_USERS[1])
 
-    def novo_solicitante(self, usuario):
+    @staticmethod
+    def novo_solicitante(usuario):
         """
         This function will create a new Usuario of type "solicitante" and store it in the mongo database
         :param usuario: this is a dictionary with the data of the user
         """
         print("NOVO SOLICITANTE")
+
         nome = usuario.get("nome", None)
         sobrenome = usuario.get("sobrenome", None)
         email = usuario.get("email", None)
@@ -141,10 +143,9 @@ class UsuarioModel:
             return make_response(
                 "usuario  nao foi encontrado, documento inexistente", 404)
 
-    def update_user(self, nome, usuario_data):
+    def update_user(self, usuario_data):
         """
         This will update a document type "Usuario" if found
-        :param nome: the nome of the 'Usuario' document
         :param usuario_data: the dictionary to use for the update
         :return: a flask response
         """
@@ -152,14 +153,15 @@ class UsuarioModel:
 
         print("TRY ")
         try:
-            query = {"nome": nome}
+            query = {"nome": usuario_data.get("nome")}
             user_set_values = {"$set": {
-                "nome": nome,
-                "sobrenome": usuario_data.get("sobrenome"),
-                "email": usuario_data.get("email"),
-                "address": usuario_data.get("address"),
-                "tipo_usuario": usuario_data.get("tipo_usuario"),
-                "last_update": usuario_data.get("last_update"), }
+                "sobrenome": usuario_data.get("sobrenome", None),
+                "email": usuario_data.get("email", None),
+                "address": usuario_data.get("address", None),
+                "username": usuario_data.get("username", None),
+                "password": usuario_data.get("password", None),
+                "tipo_usuario": usuario_data.get("tipo_usuario", None),
+                "last_update": usuario_data.get("last_update", None), }
             }
             result = ConexionMongo.update_document(db_inst=UsuarioModel.db_inst,
                                                    collection=UsuarioModel.collection, query=query,

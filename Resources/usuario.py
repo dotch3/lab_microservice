@@ -33,23 +33,13 @@ class Usuario(Resource):
         else:
             return make_response("usuario no existente", 404)
 
-    def post(self,  usuario):
+    def post(self, usuario):
         """
         Function to create a new 'Usuario' (proprietario,solicitante), using the 'Factory'pattern
         """
-        print("POST")
+        print("POST entrou!!!!")
         # For testing using this dict
-        usuario = {
-            "nome": "XXX",
-            "sobrenome": "Silva" + str(datetime.now().microsecond),
-            "email": "test@test.org",
-            "address": "av.Testingfying",
-            "password": "test2020",
-            "username": "u_" + str(datetime.now().microsecond),
-            "celular": "11988" + str(datetime.now().microsecond),
-            "last_update": str(datetime.now().strftime("%d-%m-%Y_%H_%M_%S"))
-        }
-        res_user_post = UsuarioModel.novo_solicitante(self, usuario=usuario)
+        res_user_post = UsuarioModel.novo_solicitante(usuario)
         if "flask.wrappers.Response" in str(type(res_user_post)):
             if res_user_post.status_code < 300 or "nao se criara o usuario" not in str(res_user_post.get_data()):
                 return make_response("usuario criado com sucesso", 200)
@@ -64,31 +54,14 @@ class Usuario(Resource):
                 "usuario  usuario.get('nome') criado com sucesso", 200
             )
 
-    def put(self,  usuario):
+    def put(self, usuario_data):
         """
         Function to update an 'Usuario' object
-        :param nome: str The nome of  the 'Usuario' to be updated
         :param usuario: dictionary with the parameters to be used for the update of the document
         :return: dictionary 'Usuario' with new values
         """
-        print("PUT")
-        # Using mocked data for testing purposes:
-        usuario_data = []
-        if not usuario:
-            print("none usuario retrieved , lets mockup it for tests")
-            usuario_data = {
-                "nome": nome,
-                "sobrenome": "Soarez" + str(datetime.now().microsecond),
-                "email": "test_updated" + str(datetime.now().microsecond) + "@test.org",
-                "address": "av.TestingfyingUpdate" + str(datetime.now().microsecond),
-                "tipo_usuario": "proprietario",
-                "last_update": str(datetime.now().strftime("%d-%m-%Y_%H_%M_%S"))
-            }
-        else:
-            usuario_data = usuario
-
         print(usuario_data)
-        res_user_updated = UsuarioModel.update_user(self, nome=nome, usuario_data=usuario_data)
+        res_user_updated = UsuarioModel.update_user(self, usuario_data=usuario_data)
         # Working on the data retrieved
         if res_user_updated:
             data_json = json.dumps(res_user_updated.raw_result)
