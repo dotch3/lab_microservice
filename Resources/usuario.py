@@ -33,7 +33,7 @@ class Usuario(Resource):
         else:
             return make_response("usuario no existente", 404)
 
-    def post(self, nome, sobrenome=None, email=None, address=None, password=None, username=None, celular=None):
+    def post(self, nome, sobrenome=None, email=None, address=None, password=None, username=None, celular=None, tipousuario=None):
         """
         Function to create a new 'Usuario' (proprietario,solicitante), using the 'Factory'pattern
         :param nome: str The nome of the new usuario that is unique
@@ -46,15 +46,17 @@ class Usuario(Resource):
         :return: The new document of 'Usuario' type
         """
         print("POST")
+        print(self)
         # For testing using this dict
         usuario = {
             "nome": nome,
-            "sobrenome": "Silva" + str(datetime.now().microsecond),
-            "email": "test@test.org",
-            "address": "av.Testingfying",
-            "password": "test2020",
-            "username": "u_" + str(datetime.now().microsecond),
-            "celular": "11988" + str(datetime.now().microsecond),
+            "sobrenome": sobrenome,
+            "email": email,
+            "address": address,
+            "password": password,
+            "username": username,
+            "celular": celular,
+            "tipo_usuario": tipousuario,
             "last_update": str(datetime.now().strftime("%d-%m-%Y_%H_%M_%S"))
         }
         res_user_post = UsuarioModel.novo_solicitante(self, usuario=usuario)
