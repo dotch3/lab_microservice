@@ -8,7 +8,7 @@ alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PA
 # Unset irrelevant variables.
 deactivate nondestructive
 
-setenv VIRTUAL_ENV "/Users/jmercado/Documents/FIAP Docus LOCAL/FIAP - SW Eng Dev/Laboratorios/Lab2_MicroServices/boavizinhanca_microservice/bv_env"
+setenv VIRTUAL_ENV "/home/ubuntu/environment/lab_microservice/bv_env"
 
 set _OLD_VIRTUAL_PATH="$PATH"
 setenv PATH "$VIRTUAL_ENV/bin:$PATH"

@@ -10,7 +10,6 @@ nsa.model = (function() {
     // Return the API
     return {
         read: function() {
-            console.log('PASSOU AQUI Read Item');
             let ajax_options = {
                 type: 'GET',
                 url: 'api/items',
@@ -108,15 +107,12 @@ nsa.view = (function() {
                 $lifdate = $('#lifdate').val(''),
                 $lipname = $('#lipname').val('');
         },
-        build_table: function(people) {
+        build_table_item: function(people) {
             let rowsItem = ''
-            console.log('PASSOU AQUI build_table Item')
             
             // clear the table
             $('#tableItem tbody').empty();
             
-            console.log($('#tableItem').attr("id"))
-
             var idTable = $('#tableItem').attr("id");
             
             // did we get a people array?
@@ -221,7 +217,7 @@ nsa.controller = (function(m, v) {
 
     // Handle the model events
     $event_pump.on('model_read_success', function(e, data) {
-        view.build_table(data);
+        view.build_table_item(data);
         view.reset();
     });
 

@@ -10,7 +10,6 @@ ns.model = (function() {
     // Return the API
     return {
         read: function() {
-            console.log('PASSOU AQUI Read Usuarios');
             let ajax_options = {
                 type: 'GET',
                 url: 'api/usuarios',
@@ -29,7 +28,7 @@ ns.model = (function() {
             
             let ajax_options = {
                 type: 'POST',
-                url: 'api/usuario/' + lname,
+                url: 'api/usuario',
                 accepts: 'application/json',
                 contentType: 'application/json',
                 //dataType: 'json',
@@ -52,21 +51,23 @@ ns.model = (function() {
                 $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
             })
         },
-        update: function(lname, lsobr, lende, lemai, ltele, ltipo, luser, lpass) {
+                 
+        update: function(lname, lsobr, lende, ltele, lemai, ltipo, luser, lpass) {
             let ajax_options = {
                 type: 'PUT',
-                url: 'api/usuario/' + lname,
+                url: 'api/usuario',
                 accepts: 'application/json',
                 contentType: 'application/json',
                 dataType: 'json',
                 data: JSON.stringify({
                     'nome': lname,
                     'sobrenome': lsobr,
-                    'email': lemai,
                     'address': lende,
-                    'password': lpass,
-                    'username': luser,
                     'celular': ltele,
+                    'email': lemai,
+                    'email': ltipo,
+                    'username': luser,
+                    'password': lpass,
                 })
             };
             $.ajax(ajax_options)
@@ -80,16 +81,22 @@ ns.model = (function() {
         delete: function(lname) {
             let ajax_options = {
                 type: 'DELETE',
-                url: 'api/usuario/' + lname,
+                url: 'api/usuario',
                 accepts: 'application/json',
-                contentType: 'plain/text'
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({
+                    'nome': lname
+                })
             };
             $.ajax(ajax_options)
             .done(function(data) {
+                console.log('model_delete_success')
                 $event_pump.trigger('model_delete_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
+                console.log('model_error')
+                $event_pump.trigger('model_delete_success', [xhr, textStatus, errorThrown]);
             })
         }
     };
@@ -110,15 +117,11 @@ ns.view = (function() {
                 $luser = $('#uuser').val(''),
                 $lpass = $('#upass').val('');
         },
-        build_table: function(people) {
+        build_table_usuario: function(people) {
             let rowsUsuario = ''
 
-            console.log('PASSOU AQUI build_table Usuarios')
-            
             // clear the table
             $('#tableUsuario tbody').empty();
-            
-            console.log($('#tableUsuario').attr("id"));
             
             var idTable = $('#tableUsuario').attr("id");
 
@@ -239,7 +242,7 @@ ns.controller = (function(m, v) {
 
         e.preventDefault();
 
-        if (validate('placeholder', 'placeholder', $lname)) {
+        if (validate($lname, 'placeholder', 'placeholder')) {
             var resultado = $lname.split(" ");
             $lname = resultado[0];
             model.delete($lname)
@@ -254,7 +257,7 @@ ns.controller = (function(m, v) {
 
     // Handle the model events
     $event_pump.on('model_read_success', function(e, data) {
-        view.build_table(data);
+        view.build_table_usuario(data);
         view.reset();
     });
 
@@ -267,6 +270,7 @@ ns.controller = (function(m, v) {
     });
 
     $event_pump.on('model_delete_success', function(e, data) {
+        console.log('model_delete_success')
         model.read();
     });
 

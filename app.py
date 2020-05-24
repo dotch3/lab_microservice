@@ -72,26 +72,26 @@ def index():
     return render_template('index.html')
 
 
-#
-# @app_flask.route('/api/items', methods=['GET'])
-# def items():
-#     print("getting all items")
-#     return render_template('items.html')
-#
-#
+
+@app_flask.route('/api/items', methods=['GET'])
+def items():
+   print("getting all items")
+   return render_template('items.html')
+
+
 # @app_flask.route('/api/item/<string:nome>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 # def item_nome():
 #     print("working with methods on Item object")
 #     return render_template('items.html')
 
-#
-# @app_flask.route('/api/usuarios', methods=['GET'])
-# def usuarios():
-#     print("getting all usuarios")
-#     return render_template('index.html')
+
+@app_flask.route('/api/usuarios', methods=['GET'])
+def usuarios():
+    print("getting all usuarios")
+    return render_template('index.html')
 
 
-#
+
 # @app_flask.before_first_request
 # def create_collections():
 #     print("This function will run once")

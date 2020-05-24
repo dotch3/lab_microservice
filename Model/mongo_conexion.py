@@ -61,7 +61,7 @@ class ConexionMongo:
         # In order to jsonify the dictionary, is needed to call it inside the app_context
         app = Flask(__name__)
         if not db_inst:
-            db_inst = "boa_vizinhanca"
+            db_inst = "local"
         with app.app_context():
             print("CONEXION?")
             print(db_inst)
@@ -250,7 +250,7 @@ class ConexionMongo:
             # ObjectId -> result["_id"]) = 5ec6ebfe69ee0ddd8088a495
             print("Mongo DeleteResult")
             print("class", type(result), "value ", str(result))
-            if "None" not in str(result):
+            if "None" not in type(result):
                 if ObjectId.is_valid(result["_id"]):
                     print("document deleted " + str(result["_id"]))
             else:

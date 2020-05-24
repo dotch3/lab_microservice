@@ -1,6 +1,5 @@
-#!/bin/sh
-'''exec' "/Users/jmercado/Documents/FIAP Docus LOCAL/FIAP - SW Eng Dev/Laboratorios/Lab2_MicroServices/boavizinhanca_microservice/bv_env/bin/python3" "$0" "$@"
-' '''
+#!/home/ubuntu/environment/lab_microservice/bv_env/bin/python3
+
 # -*- coding: utf-8 -*-
 import re
 import sys

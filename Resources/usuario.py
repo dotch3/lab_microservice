@@ -91,17 +91,15 @@ class Usuario(Resource):
         """
         print("DELETE")
         res_user_delete = UsuarioModel.delete_user(self, nome=nome, _id=_id)
+        print(res_user_delete)
         # Checking the response from the Model
         if res_user_delete:
             if "ObjectId" in str(type(res_user_delete)):
                 return make_response(
-                    " documento de usuario {nome} apagado com sucesso, _id {_id} ".format(nome=nome,
-                                                                                          _id=res_user_delete["_id"]),
-                    202
-                )
+                    " documento de usuario {nome} apagado com sucesso, _id {_id} ".format(nome=nome,_id=res_user_delete["_id"]),200)
             elif res_user_delete["nome"] == nome:
                 return make_response(
-                    "documento de usuario {nome} apagado com sucesso ".format(nome=nome), 202)
+                    "documento de usuario {nome} apagado com sucesso ".format(nome=nome), 20)
         else:
             print("did not find the user")
             abort(404, " documento de usuario {nome} nao foi encontrado, verifique seus dados".format(nome=nome))

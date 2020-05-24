@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/jmercado/Documents/FIAP Docus LOCAL/FIAP - SW Eng Dev/Laboratorios/Lab2_MicroServices/boavizinhanca_microservice/bv_env"
+set -gx VIRTUAL_ENV "/home/ubuntu/environment/lab_microservice/bv_env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
@@ -52,7 +52,7 @@ if test -z "$VIRTUAL_ENV_DISABLE_PROMPT"
         set -l old_status $status
 
         # Prompt override?
-        if test -n "(bv_env) "
+        if test -n "(bv_env) "            
             printf "%s%s" "(bv_env) " (set_color normal)
         else
             # ...Otherwise, prepend env
