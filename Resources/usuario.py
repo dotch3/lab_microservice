@@ -70,38 +70,41 @@ class Usuario(Resource):
                 if "None" not in str(type(usuario_data)):
                     if "flask.wrappers.Response" in str(type(res_user_updated)):
                         if res_user_updated.status_code != 400:
-                            abort(404, " documento de item {nome} nao foi encontrado".format(nome=nome))
+                            abort(404,
+                                  " documento de item {nome} nao foi encontrado".format(nome=usuario_data.get("nome")))
                     elif res_user_updated.modified_count > 0:
                         return make_response(
-                            " documento de usuario {nome} atualizado com sucesso ".format(nome=nome), 202
+                            " documento de usuario {nome} atualizado com sucesso ".format(
+                                nome=usuario_data.get("nome")), 202
                         )
             else:
-                abort(404, " documento de item {nome} nao foi encontrado".format(nome=nome))
+                abort(404, " documento de item {nome} nao foi encontrado".format(nome=usuario_data.get("nome")))
         else:
             print("did not find the user")
-            abort(400, " update do usuario {nome} nao e permitido, verifique seus dados".format(nome=nome))
+            abort(400, " update do usuario {nome} nao e permitido, verifique seus dados".format(
+                nome=usuario_data.get("nome")))
 
-    def delete(self, nome, _id=None):
+    def delete(self, usuario_data, _id=None):
         """
         Function to delete a  document of 'Usuario' type from the mongoDB collection, using 'nome' as keyword
-        :param nome: str The nome of the 'Usuario' to find and delete from the mongoDB collection
+        :param usuario_data: json with the nome of the 'Usuario' to find and delete from the mongoDB collection
         :param _id: ObjectId, the identifier of the document that can be used to find the document and delete it too
         (Not part of the MVP)
         :return: A pymongo.results.DeleteResult object
         """
         print("DELETE")
-        res_user_delete = UsuarioModel.delete_user(self, nome=nome, _id=_id)
+        res_user_delete = UsuarioModel.delete_user(self, nome=usuario_data.get("nome"), _id=_id)
         # Checking the response from the Model
         if res_user_delete:
             if "ObjectId" in str(type(res_user_delete)):
                 return make_response(
-                    " documento de usuario {nome} apagado com sucesso, _id {_id} ".format(nome=nome,
+                    " documento de usuario {nome} apagado com sucesso, _id {_id} ".format(nome=usuario_data.get("nome"),
                                                                                           _id=res_user_delete["_id"]),
                     202
                 )
-            elif res_user_delete["nome"] == nome:
+            elif res_user_delete["nome"] == usuario_data:
                 return make_response(
-                    "documento de usuario {nome} apagado com sucesso ".format(nome=nome), 202)
+                    "documento de usuario {nome} apagado com sucesso ".format(nome=usuario_data.get("nome")), 202)
         else:
             print("did not find the user")
-            abort(404, " documento de usuario {nome} nao foi encontrado, verifique seus dados".format(nome=nome))
+            abort(404, " documento de usuario {nome} nao foi encontrado, verifique seus dados".format(nome=usuario_data.get("nome")))

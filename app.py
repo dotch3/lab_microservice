@@ -58,7 +58,7 @@ def crud_usuario():
         print("Data result PUT ", req_usuario)
     elif request.method == 'DELETE':
         req_usuario = request.get_json()
-        print(req_usuario['nome'])
+
         user = Usuario()
         user.delete(req_usuario['nome'])
 
@@ -72,11 +72,11 @@ def index():
     return render_template('index.html')
 
 
-#
-# @app_flask.route('/api/items', methods=['GET'])
-# def items():
-#     print("getting all items")
-#     return render_template('items.html')
+
+@app_flask.route('/api/items', methods=['GET'])
+def items():
+    print("getting all items")
+    return render_template('items.html')
 #
 #
 # @app_flask.route('/api/item/<string:nome>', methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -85,10 +85,10 @@ def index():
 #     return render_template('items.html')
 
 #
-# @app_flask.route('/api/usuarios', methods=['GET'])
-# def usuarios():
-#     print("getting all usuarios")
-#     return render_template('index.html')
+@app_flask.route('/api/usuarios', methods=['GET'])
+def usuarios():
+    print("getting all usuarios")
+    return render_template('index.html')
 
 
 #

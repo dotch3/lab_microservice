@@ -43,6 +43,7 @@ class ConexionMongo:
         """
         mongo_client = ""
         if db_inst == "local":
+            print("local")
             mongo_client = MongoClient("mongodb://127.0.0.1:27017/")  # Local
         elif db_inst == "docker":
             mongo_client = "other config-maybe"  # Docker
@@ -61,11 +62,8 @@ class ConexionMongo:
         # In order to jsonify the dictionary, is needed to call it inside the app_context
         app = Flask(__name__)
         if not db_inst:
-            db_inst = "boa_vizinhanca"
+            db_inst = "local"
         with app.app_context():
-            print("CONEXION?")
-            print(db_inst)
-
             ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst=db_inst, collection=collection, mode="get_all")
             # Need code for handle exceptions of 0 data.
             my_dict = []
@@ -95,7 +93,7 @@ class ConexionMongo:
         """
         ITEMS = {}
         items_db = ""
-        mongo_conn = ConexionMongo.create_conexion(db_inst)
+        mongo_conn = ConexionMongo.create_conexion(db_inst=db_inst)
         print("test")
         print(str(mongo_conn))
         if mode == "get_all":
@@ -250,7 +248,7 @@ class ConexionMongo:
             # ObjectId -> result["_id"]) = 5ec6ebfe69ee0ddd8088a495
             print("Mongo DeleteResult")
             print("class", type(result), "value ", str(result))
-            if "None" not in str(result):
+            if "None" not in type(result):
                 if ObjectId.is_valid(result["_id"]):
                     print("document deleted " + str(result["_id"]))
             else:
