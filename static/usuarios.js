@@ -10,6 +10,7 @@ ns.model = (function() {
     // Return the API
     return {
         read: function() {
+            console.log('PASSOU AQUI Read Usuarios');
             let ajax_options = {
                 type: 'GET',
                 url: 'api/usuarios',
@@ -42,12 +43,9 @@ ns.model = (function() {
                     'celular': ltele,
                 })
             };
-            
-            console.log(ajax_options)
                         
             $.ajax(ajax_options)
             .done(function(data) {
-                 console.log("model_create_success "+ data);
                 $event_pump.trigger('model_create_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
@@ -101,37 +99,39 @@ ns.model = (function() {
 ns.view = (function() {
     'use strict';
 
-    let $fname = $('#fname'),
-        $lname = $('#lname');
-
     // return the API
     return {
         reset: function() {
-            $lname.val('');
-            $fname.val('').focus();
-        },
-        update_editor: function(fname, lname) {
-            $lname.val(lname);
-            $fname.val(fname).focus();
+            let $lname = $('#uname').val('').focus(),
+                $lende = $('#uende').val(''),
+                $ltele = $('#utele').val(''),
+                $lemai = $('#uemai').val(''),
+                $ltipo = $('#utipo').val(''),
+                $luser = $('#uuser').val(''),
+                $lpass = $('#upass').val('');
         },
         build_table: function(people) {
-            let rows = ''
+            let rowsUsuario = ''
 
+            console.log('PASSOU AQUI build_table Usuarios')
+            
             // clear the table
             $('#tableUsuario tbody').empty();
+            
+            console.log($('#tableUsuario').attr("id"));
+            
+            var idTable = $('#tableUsuario').attr("id");
 
             // did we get a people array?
-            if (people) {
+            if (people && idTable =="tableUsuario") {
                 for (let i=0, l=people.length; i < l; i++) {
-                    rows += `<tr><td>${people[i][1].nome}</td><td>${people[i][1].address}</td><td>${people[i][1].celular}</td></tr>`;
+                    rowsUsuario += `<tr><td>${people[i][1].nome}</td><td>${people[i][1].address}</td><td>${people[i][1].celular}</td></tr>`;
                 }
-                $('#tableUsuario tbody').append(rows);
+                $('#tableUsuario tbody').append(rowsUsuario);
             }
         },
         error: function(error_msg) {
-            $('.error')
-                .text(error_msg)
-                .css('visibility', 'visible');
+            $('.error').text(error_msg).css('visibility', 'visible');
             setTimeout(function() {
                 $('.error').css('visibility', 'hidden');
             }, 3000)
@@ -252,31 +252,6 @@ ns.controller = (function(m, v) {
         e.preventDefault();
     });
 
-    $('#ureset').click(function() {
-        //location.reload();
-        //model.read();
-        window.location.reload();
-        view.reset();
-    })
-
-    $('#tableUsuario tbody').on('dblclick', 'tr', function(e) {
-        let $target = $(e.target),
-            fname,
-            lname;
-
-        fname = $target
-            .parent()
-            .find('td.fname')
-            .text();
-
-        lname = $target
-            .parent()
-            .find('td.lname')
-            .text();
-
-        view.update_editor(fname, lname);
-    });
-
     // Handle the model events
     $event_pump.on('model_read_success', function(e, data) {
         view.build_table(data);
@@ -298,6 +273,5 @@ ns.controller = (function(m, v) {
     $event_pump.on('model_error', function(e, xhr, textStatus, errorThrown) {
         let error_msg = "Msg de Erro:" + textStatus + ': ' + errorThrown;
         view.error(error_msg);
-        console.log(error_msg);
     })
 }(ns.model, ns.view));

@@ -26,15 +26,53 @@
       <div class="row">
         <div class="col-md-12">
           <ul class="nav nav-tabs">
-            <li class="nav-item"> <a href="" class="nav-link active" data-toggle="tab" data-target="#tabone">Pagina Inicial</a> </li>
-            <li class="nav-item"> <a class="nav-link" href="" data-toggle="tab" data-target="#tabtwo">Items</a> </li>
-            <li class="nav-item"> <a href="" class="nav-link" data-toggle="tab" data-target="#tabthree">Usuários</a> </li>
+            <li class="nav-item"> <a href="" class="nav-link active" data-toggle="tab" data-target="#tabone">Items</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="" data-toggle="tab" data-target="#tabtwo">Usuários</a> </li>
           </ul>
           <div class="tab-content mt-2">
             
-            
-          <div class="tab-pane fade active show" id="tabone" role="tabpanel">
-            <div class="py-2">
+            <div class="tab-pane fade active show" id="tabone" role="tabpanel">
+              <div class="py-1">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <form id="form_incl_item" class="">
+                        <div class="form-group">
+                          <label>Nome<br></label>
+                          <input id="liname" type="text" class="form-control" placeholder="Nome">
+                        </div>
+                        <div class="form-group">
+                          <label>Descrição</label>
+                          <input id="lidescription" type="text" class="form-control" placeholder="Descrição">
+                        </div>
+                        <div class="form-group">
+                          <label>Status</label>
+                          <select class="form-control" id="listatus">
+                            <option>Livre</option>
+                            <option>Ocupado</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label>Data Inicio</label>
+                          <input id="liidate" type="text" class="form-control" placeholder="dd/mm/aaaa">
+                        </div>
+                        <div class="form-group">
+                          <label>Data Final</label>
+                          <input id="lifdate" type="text" class="form-control" placeholder="dd/mm/aaaa">
+                        </div>
+                        <div class="form-group">
+                          <label>Nome Proprietário</label>
+                          <input id="lipname" type="text" class="form-control" placeholder="Primeiro Nome">
+                        </div>
+                        <button id="icreate" class="btn btn-primary">Incluir</button> 
+                        <button id="iupdate" class="btn btn-warning">Alterar</button>
+                        <button id="idelete" class="btn btn-danger">Excluir</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="py-2">
               <div class="conteudo-items">
                 <table id="tableItem" class="table table-striped">
                   <thead class="thead-light">
@@ -49,50 +87,10 @@
                 </table>
               </div>
             </div>
-          </div>
-            
-            <div class="tab-pane fade" id="tabtwo" role="tabpanel">
-              <div class="py-1">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <form id="form_incl_item" class="">
-                        <div class="form-group">
-                          <label>Nome<br></label>
-                          <input id="liname" type="text" class="form-control" placeholder="Nome">
-                        </div>
-                        <div class="form-group">
-                          <label>Descrição</label>
-                          <input id="ldescription" type="text" class="form-control" placeholder="Descrição">
-                        </div>
-                        <div class="form-group">
-                          <label>Status</label>
-                          <input id="lstatus" type="text" class="form-control" placeholder="Livre/Ocupado">
-                        </div>
-                        <div class="form-group">
-                          <label>Data Inicio</label>
-                          <input id="lidate" type="text" class="form-control" placeholder="dd/mm/aaaa">
-                        </div>
-                        <div class="form-group">
-                          <label>Data Final</label>
-                          <input id="lfdate" type="text" class="form-control" placeholder="dd/mm/aaaa">
-                        </div>
-                        <div class="form-group">
-                          <label>Nome Proprietário</label>
-                          <input id="lpname" type="text" class="form-control" placeholder="Primeiro Nome">
-                        </div>
-                        <button id="icreate" class="btn btn-primary">Incluir</button> 
-                        <button id="iupdate" class="btn btn-warning">Alterar</button>
-                        <button id="idelete" class="btn btn-danger">Excluir</button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
             
             
-            <div class="tab-pane fade" id="tabthree" role="tabpanel">
+            <div class="tab-pane fade" id="tabtwo" role="tabpanel">
               <div class="py-1">
                 <div class="container">
                   <div class="row">
@@ -127,7 +125,7 @@
                         </div>
                         <div class="form-group">
                           <label>Senha</label>
-                          <input id="upass"  type="current-password" class="form-control" placeholder="Mínimo 4 caracteres">
+                          <input id="upass"  type="password" class="form-control" placeholder="Mínimo 4 caracteres">
                         </div>
                         <button id="ucreate" class="btn btn-primary">Incluir</button> 
                         <button id="uupdate" class="btn btn-warning">Alterar</button>
@@ -160,11 +158,8 @@
       </div>
     </div>
   </div>
-    
-    
     <script src="static/usuarios.js"></script>
     <script src="static/items.js"></script>
-
     <!-- Dependencias Bootstrap: jQuery.js, Popper.js, Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
