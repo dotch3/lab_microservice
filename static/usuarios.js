@@ -37,9 +37,11 @@ ns.model = (function() {
                     'sobrenome': lsobr,
                     'email': lemai,
                     'address': lende,
+                    'tipo_usuario': ltipo,
                     'password': lpass,
                     'username': luser,
                     'celular': ltele,
+                    
                 })
             };
                         
@@ -95,7 +97,6 @@ ns.model = (function() {
                 $event_pump.trigger('usuario_delete_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                console.log('usuario_model_error')
                 $event_pump.trigger('model_delete_success', [xhr, textStatus, errorThrown]);
             })
         }

@@ -28,7 +28,7 @@ nsa.model = (function() {
             
             let ajax_options = {
                 type: 'POST',
-                url: 'api/item/' + liname,
+                url: 'api/item',
                 accepts: 'application/json',
                 contentType: 'application/json',
                 //dataType: 'json',
@@ -53,7 +53,7 @@ nsa.model = (function() {
         update: function(liname, lidescription, listatus, liidate, lifdate, lipname) {
             let ajax_options = {
                 type: 'PUT',
-                url: 'api/item/' + liname,
+                url: 'api/item',
                 accepts: 'application/json',
                 contentType: 'application/json',
                 dataType: 'json',
@@ -77,9 +77,13 @@ nsa.model = (function() {
         delete: function(lname) {
             let ajax_options = {
                 type: 'DELETE',
-                url: 'api/item/' + lname,
+                url: 'api/item',
                 accepts: 'application/json',
-                contentType: 'plain/text'
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({
+                    'nome': lname
+                })
             };
             $.ajax(ajax_options)
             .done(function(data) {
