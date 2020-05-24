@@ -1,208 +1,35 @@
-<!DOCTYPE html>
-<html>
-
-<head>
+<html lang="pt-br">
+  <head>
     <!-- Meta tags Obrigatórias: https://getbootstrap.com.br/docs/3.3/css/#tables -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-    <title>Boa Vizinhaça</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
-    <link rel="stylesheet" href="{{ url_for('static',filename='theme.css') }}" type="text/css">
-    <script src="{{ url_for('static',filename='items.js') }}" crossorigin="anonymous"/>
-    }}
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+    <title>Boa Vizinhança</title>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Boa Vizinhança</h1>
+      <div class="section editor"> 
+        <label for="name">Nome <input id="name" class="form-control" type="text"> </label> <br>
+        <button id="create" class="btn btn-primary">Incluir</button> 
+        <button id="banana" class="btn btn-primary">Bananada</button> 
+      <br>
+      <div class="error"> </div>
+    </div>
+    <script src="static/usuarios.js"></script>
+    <script>
+        $(document).ready(function(){
+          $("#banana").click(function(){
+             alert('Bananada CARAI');
+          });
+        });
     </script>
-</head>
-
-<body>
-<div class="py-3 text-primary bg-info" style="">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="">Boa Vizinhança</h1>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="py-1">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item"><a href="" class="nav-link active" data-toggle="tab" data-target="#tabone">Pagina
-                        Inicial</a></li>
-                    <li class="nav-item"><a class="nav-link" href="" data-toggle="tab" data-target="#tabtwo">Items</a>
-                    </li>
-                    <li class="nav-item"><a href="" class="nav-link" data-toggle="tab"
-                                            data-target="#tabthree">Usuários</a></li>
-                </ul>
-                <div class="tab-content mt-2">
-                    <div class="tab-pane fade active show" id="tabone" role="tabpanel">
-                        <div class="py-2">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="list-group">
-                                            <a href="#" class="list-group-item list-group-item-action active"> Items</a>
-                                            <a href="#" class="list-group-item list-group-item-action"
-                                               data-target="#exampleModal" data-toggle="modal">Martelo</a>
-                                            <a href="#" class="list-group-item list-group-item-action"
-                                               data-target="#exampleModal" data-toggle="modal">Aspirador</a>
-                                            <a href="#" class="list-group-item list-group-item-action"
-                                               data-target="#exampleModal" data-toggle="modal">Furadeira</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal fade" id="exampleModal" aria-hidden="true" aria-labelledby="exampleModalLabel"
-                             role="dialog" tabindex="-1">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Detalhe Item</h5>
-                                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Proprietário: Jorgito</b></h5>
-                                                <h6 class="card-subtitle my-2 text-muted">Martelo</h6>
-                                                <p class="card-text">Descrição do Item</p>
-                                                <h6 class="card-subtitle my-2 text-muted">Data Inicio</h6>
-                                                <p class="card-text">11/11/2222</p>
-                                                <h6 class="card-subtitle my-2 text-muted">Data Final</h6>
-                                                <p class="card-text">11/11/2222</p>
-                                                <h6 class="card-subtitle my-2 text-muted">Status</h6>
-                                                <p class="card-text">Livre</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="tabtwo" role="tabpanel">
-                        <div class="py-1">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <form class="">
-                                            <div class="form-group">
-                                                <label>Nome<br></label>
-                                                <input id="liname" type="text" class="form-control" placeholder="Nome">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Descrição</label>
-                                                <input id="ldescription" type="text" class="form-control"
-                                                       placeholder="Descrição">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Status</label>
-                                                <input id="lstatus" type="text" class="form-control"
-                                                       placeholder="Livre/Ocupado">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Data Inicio</label>
-                                                <input id="lidate" type="text" class="form-control"
-                                                       placeholder="dd/mm/aaaa">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Data Final</label>
-                                                <input id="lfdate" type="text" class="form-control"
-                                                       placeholder="dd/mm/aaaa">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Nome Proprietário</label>
-                                                <input id="lpname" type="text" class="form-control"
-                                                       placeholder="Primeiro Nome">
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Incluir</button>
-                                            <button type="submit" class="btn btn-primary">Alterar</button>
-                                            <button type="submit" class="btn btn-primary">Excluir</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="tabthree" role="tabpanel">
-                        <div class="py-1">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <form class="">
-                                            <div class="form-group">
-                                                <label>Nome<br></label>
-                                                <input type="text" class="form-control" placeholder="Nome Completo">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Endereço</label>
-                                                <input type="text" class="form-control" placeholder="Rua, Av, Pça">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Telefone</label>
-                                                <input type="text" class="form-control" placeholder="(XX) XXXXX-XXXX">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Tipo</label>
-                                                <input type="text" class="form-control"
-                                                       placeholder="Proprietário/Solicitante">
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Incluir</button>
-                                            <button type="submit" class="btn btn-primary">Alterar</button>
-                                            <button type="submit" class="btn btn-primary">Excluir</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="py-2">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="list-group">
-                                            <a href="#" class="list-group-item list-group-item-action active">
-                                                Usuários</a>
-                                            <a href="#" class="list-group-item list-group-item-action">Jorgito Mercado
-                                                (Proprietário)</a>
-                                            <a href="#" class="list-group-item list-group-item-action">Henrique
-                                                (Proprietário)</a>
-                                            <a href="#" class="list-group-item list-group-item-action disabled">Reinaldo
-                                                (Proprietário)</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"
-        style=""></script>
-<pingendo onclick="window.open('https://pingendo.com/', '_blank')"
-          style="cursor:pointer;position: fixed;bottom: 20px;right:20px;padding:4px;background-color: #00b0eb;border-radius: 8px; width:220px;display:flex;flex-direction:row;align-items:center;justify-content:center;font-size:14px;color:white">
-    Made with Pingendo Free&nbsp;&nbsp;<img src="https://pingendo.com/site-assets/Pingendo_logo_big.png" class="d-block"
-                                            alt="Pingendo logo" height="16"></pingendo>
-</body>
-
+    <!-- Dependencias Bootstrap: jQuery.js, Popper.js, Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
 </html>
+
