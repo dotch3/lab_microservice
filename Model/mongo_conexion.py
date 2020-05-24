@@ -14,24 +14,39 @@ class ConexionMongo:
     def __repr__(self):
         return f"<MongoConnClient:{self.client}, database: {self.service} , collection {self.collection}.>"
 
-    @classmethod
-    def connect_first_time(cls):
+    @staticmethod
+    def connect_first_time():
         """
         will check the databases on the mongo server
         :return: bool Creation of collections succeeded
         """
+        print("Creating the database and collections")
         mongo_client = MongoClient("mongodb://127.0.0.1:27017/")
         db_names = mongo_client.list_database_names()
         # use enumerate to iterate the database names list
-        db_boa_vizinhanca = False
         for db in db_names:
-            print(type(db))
             if db == "local":
                 print("found")
             print(db)
 
+        local_db = mongo_client["local"]
+        usuarios = local_db["usuarios"]
+        items = local_db["items"]
+        print(type(usuarios))
+        print(type(items))
+
+        collection_names = local_db.list_collection_names()
+        print(collection_names)
+        for col_num, col in enumerate(collection_names):
+            print(col, "--", col_num)
+            if "usuarios" in collection_names and "items" in collection_names:
+                print("Passed")
+
         # get the total num of databases
         print("total databases:", len(db_names))
+
+        host_info = mongo_client['HOST']
+        print("host:", host_info)
 
     @classmethod
     def create_conexion(cls, db_inst):
@@ -267,6 +282,7 @@ class ConexionMongo:
         :param item_name: the name of the item to find
         :return: the item if this is found
         """
+        item = ""
         ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst, collection, mode="get_one")
         if item_name in ITEMS:
             item = ITEMS.get(item_name)

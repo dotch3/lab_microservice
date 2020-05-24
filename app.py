@@ -4,7 +4,6 @@ from flask_restx import Api
 from Model.mongo_conexion import ConexionMongo
 from Resources.usuario import Usuario
 from Resources.usuarioList import UsuarioList
-from Model.usuario_model import UsuarioModel
 from Resources.item import Item
 from Resources.itemList import ItemList
 
@@ -108,11 +107,10 @@ def usuarios():
     return render_template('index.html')
 
 
-# @app_flask.before_first_request
-# def create_collections():
-#     print("This function will run once")
-#     res = ConexionMongo.connect_first_time()
-#     print(res)
+@app_flask.before_first_request
+def create_collections():
+    print("This function will run once")
+    ConexionMongo.connect_first_time()
 
 
 if __name__ == '__main__':
