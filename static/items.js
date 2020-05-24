@@ -10,6 +10,7 @@ nsa.model = (function() {
     // Return the API
     return {
         read: function() {
+            console.log('PASSOU AQUI Read Item');
             let ajax_options = {
                 type: 'GET',
                 url: 'api/items',
@@ -24,51 +25,46 @@ nsa.model = (function() {
                 $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
             })
         },
-        create: function(lname, lsobr, lende, lemai, ltele, ltipo, luser, lpass) {
+        create: function(liname, lidescription, listatus, liidate, lifdate, lipname) {
             
             let ajax_options = {
                 type: 'POST',
-                url: 'api/item/' + lname,
+                url: 'api/item/' + liname,
                 accepts: 'application/json',
                 contentType: 'application/json',
                 //dataType: 'json',
                 data: JSON.stringify({
-                    'nome': lname,
-                    'sobrenome': lsobr,
-                    'email': lemai,
-                    'address': lende,
-                    'password': lpass,
-                    'username': luser,
-                    'celular': ltele,
+                    'nome': liname,
+                    'descricao': lidescription,
+                    'data_inicio': liidate,
+                    'data_final': lifdate,
+                    'status': listatus,
+                    'proprietario': lipname,
                 })
             };
-            
-            console.log(ajax_options)
-                        
+             
             $.ajax(ajax_options)
             .done(function(data) {
-                 console.log("model_create_success "+ data);
                 $event_pump.trigger('model_create_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
                 $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
             })
         },
-        update: function(lname, lsobr, lende, lemai, ltele, ltipo, luser, lpass) {
+        update: function(liname, lidescription, listatus, liidate, lifdate, lipname) {
             let ajax_options = {
                 type: 'PUT',
-                url: 'api/item/' + lname,
+                url: 'api/item/' + liname,
                 accepts: 'application/json',
                 contentType: 'application/json',
                 dataType: 'json',
                 data: JSON.stringify({
-                    'nome': lname,
-                    'sobrenome': lsobr,
-                    'email': lemai,
-                    'address': lende,
-                    'password': lpass,
-                    'username': luser,
-                    'celular': ltele,
+                    'nome': liname,
+                    'descricao': lidescription,
+                    'data_inicio': liidate,
+                    'data_final': lifdate,
+                    'status': listatus,
+                    'proprietario': lipname,
                 })
             };
             $.ajax(ajax_options)
@@ -101,37 +97,38 @@ nsa.model = (function() {
 nsa.view = (function() {
     'use strict';
 
-    let $fname = $('#fname'),
-        $lname = $('#lname');
 
     // return the API
     return {
         reset: function() {
-            $lname.val('');
-            $fname.val('').focus();
-        },
-        update_editor: function(fname, lname) {
-            $lname.val(lname);
-            $fname.val(fname).focus();
+            let $liname = $('#liname').val('').focus(),
+                $lidescription = $('#lidescription').val(''),
+                $listatus = $('#listatus').val(''),
+                $liidate = $('#liidate').val(''),
+                $lifdate = $('#lifdate').val(''),
+                $lipname = $('#lipname').val('');
         },
         build_table: function(people) {
-            let rows = ''
-
+            let rowsItem = ''
+            console.log('PASSOU AQUI build_table Item')
+            
             // clear the table
             $('#tableItem tbody').empty();
+            
+            console.log($('#tableItem').attr("id"))
 
+            var idTable = $('#tableItem').attr("id");
+            
             // did we get a people array?
-            if (people) {
+            if (people && idTable =="tableItem") {
                 for (let i=0, l=people.length; i < l; i++) {
-                    rows += `<tr><td>${people[i][1].nome}</td><td>${people[i][1].descricao}</td><td>${people[i][1].status}</td></tr>`;
+                    rowsItem += `<tr><td>${people[i][1].nome}</td><td>${people[i][1].descricao}</td><td>${people[i][1].status}</td></tr>`;
                 }
-                $('#tableItem tbody').append(rows);
+                $('#tableItem tbody').append(rowsItem);
             }
         },
         error: function(error_msg) {
-            $('.error')
-                .text(error_msg)
-                .css('visibility', 'visible');
+            $('.error').text(error_msg).css('visibility', 'visible');
             setTimeout(function() {
                 $('.error').css('visibility', 'hidden');
             }, 3000)
@@ -166,113 +163,60 @@ nsa.controller = (function(m, v) {
     // Create our event handlers
     $('#icreate').click(function(e) {
         
-        let $lname = $('#uname').val(),
-            $lende = $('#uende').val(),
-            $ltele = $('#utele').val(),
-            $lemai = $('#uemai').val(),
-            $ltipo = $('#utipo').val(),
-            $luser = $('#uuser').val(),
-            $lpass = $('#upass').val();
+        let $liname = $('#liname').val(),
+            $lidescription = $('#lidescription').val(),
+            $listatus = $('#listatus').val(),
+            $liidate = $('#liidate').val(),
+            $lifdate = $('#lifdate').val(),
+            $lipname = $('#lipname').val();
         
         e.preventDefault();
 
-       if (validate($lname, $luser, $lpass)) {
-            if (validateSenha($luser, $lpass)) {
-                
-                var resultado = $lname.split(" ");
-                $lname = resultado[0];
-                
-               var lsobr = "";
-                for (var i = 1; i < resultado.length; i++) {
-                     var prop = resultado[i];
-                     lsobr = lsobr + " " + prop;
-                }
-                model.create($lname, lsobr, $lende, $ltele, $lemai, $ltipo, $luser, $lpass);
-                $('#form_incl_usuario').each (function(){
-                    this.reset();
-                });
-            } else {
-                alert('Usuario e Senha devem ter o mínimo de caracteres exigido');
-            }
+       if (validate($liname, $lidescription, $lipname)) {
+            model.create($liname, $lidescription, $listatus, $liidate, $lifdate, $lipname);
+            $('#form_incl_item').each (function(){
+                this.reset();
+            });
         } else {
-            alert('Nome, Usuário e Senha não podem ser vazios!');
+            alert('Nome, Descricao e Nome do Proprietario não podem ser vazios!');
         }
     });
 
     $('#iupdate').click(function(e) {
-       let $lname = $('#uname').val(),
-            $lende = $('#uende').val(),
-            $ltele = $('#utele').val(),
-            $lemai = $('#uemai').val(),
-            $ltipo = $('#utipo').val(),
-            $luser = $('#uuser').val(),
-            $lpass = $('#upass').val();
+      let $liname = $('#liname').val(),
+            $lidescription = $('#lidescription').val(),
+            $listatus = $('#listatus').val(),
+            $liidate = $('#liidate').val(),
+            $lifdate = $('#lifdate').val(),
+            $lipname = $('#lipname').val();
         
         e.preventDefault();
 
-       if (validate($lname, $luser, $lpass)) {
-            if (validateSenha($luser, $lpass)) {
-                
-                var resultado = $lname.split(" ");
-                $lname = resultado[0];
-                
-                var lsobr = "";
-                for (var i = 1; i < resultado.length; i++) {
-                     var prop = resultado[i];
-                     lsobr = lsobr + " " + prop;
-                }
-                model.update($lname, lsobr, $lende, $ltele, $lemai, $ltipo, $luser, $lpass);
-                $('#form_incl_usuario').each (function(){
-                    this.reset();
-                });
-            } else {
-                alert('Usuario e Senha devem ter o mínimo de caracteres exigido');
-            }
+       if (validate($liname, $lidescription, $lipname)) {
+            model.update($liname, $lidescription, $listatus, $liidate, $lifdate, $lipname);
+            $('#form_incl_item').each (function(){
+                this.reset();
+            });
         } else {
-            alert('Nome, Usuário e Senha não podem ser vazios!');
+            alert('Nome, Descricao e Nome do Proprietario não podem ser vazios!');
         }
     });
 
     $('#idelete').click(function(e) {
       
-        let $itName = $('#liname').val();
-        console.log($itName)
+        let $liname = $('#liname').val();
+
         e.preventDefault();
 
-        if (validate($itName, 'placeholder', 'placeholder')) {
-            model.delete($itName)
+        if (validate($liname, 'placeholder', 'placeholder')) {
+            model.delete($liname)
             $('#form_incl_item').each (function(){
                 this.reset();
             });
         } else {
-            alert('Problema com os parâmetros: primeiro ou último nome');
+            alert('Problema com os parâmetros: Nome');
         }
         e.preventDefault();
-    });
-
-    $('#ireset').click(function() {
-        //location.reload();
-        //model.read();
-        window.location.reload();
-        view.reset();
-    })
-
-    $('#tableItem tbody').on('dblclick', 'tr', function(e) {
-        let $target = $(e.target),
-            fname,
-            lname;
-
-        fname = $target
-            .parent()
-            .find('td.fname')
-            .text();
-
-        lname = $target
-            .parent()
-            .find('td.lname')
-            .text();
-
-        view.update_editor(fname, lname);
     });
 
     // Handle the model events
@@ -296,6 +240,5 @@ nsa.controller = (function(m, v) {
     $event_pump.on('model_error', function(e, xhr, textStatus, errorThrown) {
         let error_msg = "Msg de Erro:" + textStatus + ': ' + errorThrown;
         view.error(error_msg);
-        console.log(error_msg);
     })
 }(nsa.model, nsa.view));
