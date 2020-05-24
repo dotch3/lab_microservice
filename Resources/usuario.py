@@ -64,7 +64,7 @@ class Usuario(Resource):
                 "usuario  usuario.get('nome') criado com sucesso", 200
             )
 
-    def put(self, nome, usuario=None):
+    def put(self,  usuario):
         """
         Function to update an 'Usuario' object
         :param nome: str The nome of  the 'Usuario' to be updated
