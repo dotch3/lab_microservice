@@ -99,7 +99,7 @@ class Usuario(Resource):
                     " documento de usuario {nome} apagado com sucesso, _id {_id} ".format(nome=nome,_id=res_user_delete["_id"]),200)
             elif res_user_delete["nome"] == nome:
                 return make_response(
-                    "documento de usuario {nome} apagado com sucesso ".format(nome=nome), 20)
+                    "documento de usuario {nome} apagado com sucesso ".format(nome=nome), 200)
         else:
             print("did not find the user")
             abort(404, " documento de usuario {nome} nao foi encontrado, verifique seus dados".format(nome=nome))

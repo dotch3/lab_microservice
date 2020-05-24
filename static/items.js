@@ -18,10 +18,10 @@ nsa.model = (function() {
             };
             $.ajax(ajax_options)
             .done(function(data) {
-                $event_pump.trigger('model_read_success', [data]);
+                $event_pump.trigger('item_read_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
+                $event_pump.trigger('item_model_error', [xhr, textStatus, errorThrown]);
             })
         },
         create: function(liname, lidescription, listatus, liidate, lifdate, lipname) {
@@ -44,10 +44,10 @@ nsa.model = (function() {
              
             $.ajax(ajax_options)
             .done(function(data) {
-                $event_pump.trigger('model_create_success', [data]);
+                $event_pump.trigger('item_create_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
+                $event_pump.trigger('item_model_error', [xhr, textStatus, errorThrown]);
             })
         },
         update: function(liname, lidescription, listatus, liidate, lifdate, lipname) {
@@ -68,10 +68,10 @@ nsa.model = (function() {
             };
             $.ajax(ajax_options)
             .done(function(data) {
-                $event_pump.trigger('model_update_success', [data]);
+                $event_pump.trigger('item_update_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
+                $event_pump.trigger('item_model_error', [xhr, textStatus, errorThrown]);
             })
         },
         delete: function(lname) {
@@ -83,10 +83,10 @@ nsa.model = (function() {
             };
             $.ajax(ajax_options)
             .done(function(data) {
-                $event_pump.trigger('model_delete_success', [data]);
+                $event_pump.trigger('item_delete_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
+                $event_pump.trigger('item_model_error', [xhr, textStatus, errorThrown]);
             })
         }
     };
@@ -107,18 +107,15 @@ nsa.view = (function() {
                 $lifdate = $('#lifdate').val(''),
                 $lipname = $('#lipname').val('');
         },
-        build_table_item: function(people) {
+        build_table_item: function(item) {
             let rowsItem = ''
             
-            // clear the table
-            $('#tableItem tbody').empty();
-            
-            var idTable = $('#tableItem').attr("id");
-            
-            // did we get a people array?
-            if (people && idTable =="tableItem") {
-                for (let i=0, l=people.length; i < l; i++) {
-                    rowsItem += `<tr><td>${people[i][1].nome}</td><td>${people[i][1].descricao}</td><td>${people[i][1].status}</td></tr>`;
+            if (item) {
+                // clear the table
+                $('#tableItem tbody').empty();
+                // did we get a people array?
+                for (let i=0, l=item.length; i < l; i++) {
+                    rowsItem += `<tr><td>${item[i][1].nome}</td><td>${item[i][1].descricao}</td><td>${item[i][1].status}</td></tr>`;
                 }
                 $('#tableItem tbody').append(rowsItem);
             }
@@ -216,24 +213,26 @@ nsa.controller = (function(m, v) {
     });
 
     // Handle the model events
-    $event_pump.on('model_read_success', function(e, data) {
+    $event_pump.on('item_read_success', function(e, data) {
+        console.log("$event_pump.on('item_read_success - item')")
+        console.log(data)
         view.build_table_item(data);
         view.reset();
     });
 
-    $event_pump.on('model_create_success', function(e, data) {
+    $event_pump.on('item_create_success', function(e, data) {
         model.read();
     });
 
-    $event_pump.on('model_update_success', function(e, data) {
+    $event_pump.on('item_update_success', function(e, data) {
         model.read();
     });
 
-    $event_pump.on('model_delete_success', function(e, data) {
+    $event_pump.on('item_delete_success', function(e, data) {
         model.read();
     });
 
-    $event_pump.on('model_error', function(e, xhr, textStatus, errorThrown) {
+    $event_pump.on('item_model_error', function(e, xhr, textStatus, errorThrown) {
         let error_msg = "Msg de Erro:" + textStatus + ': ' + errorThrown;
         view.error(error_msg);
     })

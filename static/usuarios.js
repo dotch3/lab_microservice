@@ -18,10 +18,10 @@ ns.model = (function() {
             };
             $.ajax(ajax_options)
             .done(function(data) {
-                $event_pump.trigger('model_read_success', [data]);
+                $event_pump.trigger('usuario_read_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
+                $event_pump.trigger('usuario_model_error', [xhr, textStatus, errorThrown]);
             })
         },
         create: function(lname, lsobr, lende, lemai, ltele, ltipo, luser, lpass) {
@@ -45,10 +45,10 @@ ns.model = (function() {
                         
             $.ajax(ajax_options)
             .done(function(data) {
-                $event_pump.trigger('model_create_success', [data]);
+                $event_pump.trigger('usuario_create_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
+                $event_pump.trigger('usuario_model_error', [xhr, textStatus, errorThrown]);
             })
         },
                  
@@ -72,10 +72,10 @@ ns.model = (function() {
             };
             $.ajax(ajax_options)
             .done(function(data) {
-                $event_pump.trigger('model_update_success', [data]);
+                $event_pump.trigger('usuario_update_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                $event_pump.trigger('model_error', [xhr, textStatus, errorThrown]);
+                $event_pump.trigger('usuario_model_error', [xhr, textStatus, errorThrown]);
             })
         },
         delete: function(lname) {
@@ -92,10 +92,10 @@ ns.model = (function() {
             $.ajax(ajax_options)
             .done(function(data) {
                 console.log('model_delete_success')
-                $event_pump.trigger('model_delete_success', [data]);
+                $event_pump.trigger('usuario_delete_success', [data]);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                console.log('model_error')
+                console.log('usuario_model_error')
                 $event_pump.trigger('model_delete_success', [xhr, textStatus, errorThrown]);
             })
         }
@@ -117,18 +117,15 @@ ns.view = (function() {
                 $luser = $('#uuser').val(''),
                 $lpass = $('#upass').val('');
         },
-        build_table_usuario: function(people) {
+        build_table_usuario: function(usuario) {
             let rowsUsuario = ''
-
-            // clear the table
-            $('#tableUsuario tbody').empty();
             
-            var idTable = $('#tableUsuario').attr("id");
-
-            // did we get a people array?
-            if (people && idTable =="tableUsuario") {
-                for (let i=0, l=people.length; i < l; i++) {
-                    rowsUsuario += `<tr><td>${people[i][1].nome}</td><td>${people[i][1].address}</td><td>${people[i][1].celular}</td></tr>`;
+            if (usuario) {
+                // clear the table
+                $('#tableUsuario tbody').empty();
+                // did we get a people array?
+                for (let i=0, l=usuario.length; i < l; i++) {
+                    rowsUsuario += `<tr><td>${usuario[i][1].nome}</td><td>${usuario[i][1].address}</td><td>${usuario[i][1].celular}</td></tr>`;
                 }
                 $('#tableUsuario tbody').append(rowsUsuario);
             }
@@ -256,25 +253,26 @@ ns.controller = (function(m, v) {
     });
 
     // Handle the model events
-    $event_pump.on('model_read_success', function(e, data) {
+    $event_pump.on('usuario_read_success', function(e, data) {
+        console.log("$event_pump.on('usuario_read_success - usuario')")
+        console.log(data)
         view.build_table_usuario(data);
         view.reset();
     });
 
-    $event_pump.on('model_create_success', function(e, data) {
+    $event_pump.on('usuario_create_success', function(e, data) {
         model.read();
     });
 
-    $event_pump.on('model_update_success', function(e, data) {
+    $event_pump.on('usuario_update_success', function(e, data) {
         model.read();
     });
 
-    $event_pump.on('model_delete_success', function(e, data) {
-        console.log('model_delete_success')
+    $event_pump.on('usuario_delete_success', function(e, data) {
         model.read();
     });
 
-    $event_pump.on('model_error', function(e, xhr, textStatus, errorThrown) {
+    $event_pump.on('usuario_model_error', function(e, xhr, textStatus, errorThrown) {
         let error_msg = "Msg de Erro:" + textStatus + ': ' + errorThrown;
         view.error(error_msg);
     })
