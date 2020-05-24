@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, errors
 from bson.objectid import ObjectId
 from flask import Flask
 from flask import jsonify, make_response, abort
@@ -15,13 +15,32 @@ class ConexionMongo:
         return f"<MongoConnClient:{self.client}, database: {self.service} , collection {self.collection}.>"
 
     @classmethod
+    def connect_first_time(cls):
+        """
+        will check the databases on the mongo server
+        :return: bool Creation of collections succeeded
+        """
+        mongo_client = MongoClient("mongodb://127.0.0.1:27017/")
+        db_names = mongo_client.list_database_names()
+        # use enumerate to iterate the database names list
+        db_boa_vizinhanca = False
+        for db in db_names:
+            print(type(db))
+            if db == "local":
+                print("found")
+            print(db)
+
+        # get the total num of databases
+        print("total databases:", len(db_names))
+
+    @classmethod
     def create_conexion(cls, db_inst):
         """
         This will create the mongo db connexion
         :param db_inst: str The location of the database: local or remote
+        :param f_time: bool The flag run the create_conexion and create database
         :return:  mongodb client conexion
         """
-        print("create_conexion")
         mongo_client = ""
         if db_inst == "local":
             mongo_client = MongoClient("mongodb://127.0.0.1:27017/")  # Local
@@ -42,10 +61,13 @@ class ConexionMongo:
         # In order to jsonify the dictionary, is needed to call it inside the app_context
         app = Flask(__name__)
         if not db_inst:
-            db_inst = 'local'
+            db_inst = "boa_vizinhanca"
         with app.app_context():
+            print("CONEXION?")
+            print(db_inst)
 
             ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst=db_inst, collection=collection, mode="get_all")
+            # Need code for handle exceptions of 0 data.
             my_dict = []
             for key in sorted(ITEMS.keys()):
                 temp = [key, ITEMS[key]]
@@ -74,6 +96,8 @@ class ConexionMongo:
         ITEMS = {}
         items_db = ""
         mongo_conn = ConexionMongo.create_conexion(db_inst)
+        print("test")
+        print(str(mongo_conn))
         if mode == "get_all":
             try:
                 print("get_dict_from_mongodb::get_all")
@@ -120,7 +144,7 @@ class ConexionMongo:
                         print("dictionary " + str(items_db.get("_id")))
                         return items_db
                     else:
-                        print(f"Nao se encontra o documento com esse nome {nome}".format())
+                        print(f"Nao se encontra o documento com esse nome {nome}".format(nome=nome))
                         return False
 
                 elif _id:
@@ -225,7 +249,7 @@ class ConexionMongo:
             # {'_id': ObjectId('5ec6ebfe69ee0ddd8088a495'), 'nome': '
             # ObjectId -> result["_id"]) = 5ec6ebfe69ee0ddd8088a495
             print("Mongo DeleteResult")
-            print("class",type(result),"value ", str(result))
+            print("class", type(result), "value ", str(result))
             if "None" not in str(result):
                 if ObjectId.is_valid(result["_id"]):
                     print("document deleted " + str(result["_id"]))

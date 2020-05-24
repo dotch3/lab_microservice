@@ -2,6 +2,7 @@ from flask import render_template
 from flask import Flask
 from flask_restx import Api
 
+from Model.mongo_conexion import ConexionMongo
 from Resources.usuario import Usuario
 from Resources.usuarioList import UsuarioList
 from Resources.item import Item
@@ -33,33 +34,44 @@ api.add_resource(Usuario, *routes)
 
 @app_flask.route('/home', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def index():
-
     return render_template('index.html')
 
 
 @app_flask.route('/home/aux', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def home():
+    print("index is running")
     return render_template('usuarios.html')
 
 
 @app_flask.route('/api/items', methods=['GET'])
 def items():
+    print("getting all items")
     return render_template('items.html')
 
 
 @app_flask.route('/api/item/<string:nome>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def item_nome():
+    print("working with methods on Item object")
     return render_template('items.html')
 
 
 @app_flask.route('/api/usuarios', methods=['GET'])
 def usuarios():
+    print("getting all usuarios")
     return render_template('usuarios.html')
 
 
-@app_flask.route('/api/usuario/<string:nome>', methods=['GET', 'POST', 'DELETE', 'PUT'])
+@app_flask.route('/api/usuario/', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def usuario_nome():
+    print("working with methods on Usuarios object")
     return render_template('usuario.html')
+
+
+@app_flask.before_first_request
+def create_collections():
+    print("This function will run once")
+    res = ConexionMongo.connect_first_time()
+    print(res)
 
 
 if __name__ == '__main__':
