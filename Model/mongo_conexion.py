@@ -21,7 +21,7 @@ class ConexionMongo:
         :return: bool Creation of collections succeeded
         """
         print("Creating the database and collections")
-        mongo_client = MongoClient("mongodb://127.0.0.1:27017/")
+        mongo_client = MongoClient("mongodb://localhost:27017/")
         db_names = mongo_client.list_database_names()
         # use enumerate to iterate the database names list
         for db in db_names:
@@ -59,7 +59,7 @@ class ConexionMongo:
         mongo_client = ""
         if db_inst == "local":
             print("local")
-            mongo_client = MongoClient("mongodb://127.0.0.1:27017/")  # Local
+            mongo_client = MongoClient("mongodb://localhost:27017/")  # Local
         elif db_inst == "docker":
             mongo_client = "other config-maybe"  # Docker
         db_conn = mongo_client[db_inst]

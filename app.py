@@ -98,7 +98,7 @@ def crud_item():
 @app_flask.route('/api/items', methods=['GET'])
 def items():
     print("getting all items")
-    return render_template('items.html')
+    return render_template('index.html')
 
 
 @app_flask.route('/api/usuarios', methods=['GET'])
@@ -106,11 +106,14 @@ def usuarios():
     print("getting all usuarios")
     return render_template('index.html')
 
-
-@app_flask.before_first_request
-def create_collections():
-    print("This function will run once")
-    ConexionMongo.connect_first_time()
+#
+# @app_flask.before_first_request
+# def create_collections():
+#     print("This function will run once")
+#     try:
+#         ConexionMongo.connect_first_time()
+#     except Exception as e:
+#         print(f"ERROR MONGO:  Cannot connect to mongo {e}")
 
 
 if __name__ == '__main__':
