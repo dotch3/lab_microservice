@@ -1,5 +1,5 @@
+import os
 from datetime import datetime
-
 from flask import make_response
 from Model.mongo_conexion import ConexionMongo
 from bson import ObjectId
@@ -7,7 +7,7 @@ from bson import ObjectId
 
 class ItemModel:
     collection = "items"
-    db_inst = "local"
+    db_inst = os.environ['MONGODB_DATABASE']
 
     def __init__(self, item_id=None, nome=None, descricao=None, data_inicio=None, data_final=None, status=None,
                  proprietario=None):
@@ -49,8 +49,9 @@ class ItemModel:
         else:
             return make_response(
                 "item  nao foi encontrado, documento inexistente", 404)
+
     @staticmethod
-    def novo_item( item):
+    def novo_item(item):
         """
         Will create the new object Item using the data entered through the resource
         :param: dictionary with the item key:values
@@ -89,13 +90,14 @@ class ItemModel:
                 # @TODO  change the logic to get the object res itself and use them for the JSON response
 
                 if res_creation.acknowledged and ObjectId.is_valid(res_creation.inserted_id):
-                    print("Data retrieved of mongo operation:", res_creation.acknowledged, res_creation.inserted_id)
+                    print("Data retrieved of mongo operation:",
+                          res_creation.acknowledged, res_creation.inserted_id)
                 return res_creation
                 # return make_response("Item {nome} criado com sucesso ".format(
                 #     nome=nome), 201)
 
             elif ObjectId.is_valid(data_found["_id"]):
-                print("The object exists") # For testing
+                print("The object exists")  # For testing
                 return data_found
             return make_response("item ja existe na collection, nao se criara o item", 401)
 

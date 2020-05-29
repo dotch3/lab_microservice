@@ -1,4 +1,10 @@
+import os
+from flask import Flask, request, jsonify
+
+from pymongo import MongoClient, errors
+
 from flask import Flask, request, render_template
+from flask_restful import fields, reqparse
 from flask_restx import Api
 
 from Model.mongo_conexion import ConexionMongo
@@ -6,6 +12,10 @@ from Resources.usuario import Usuario
 from Resources.usuarioList import UsuarioList
 from Resources.item import Item
 from Resources.itemList import ItemList
+
+# Logs
+# import ptvsd
+# ptvsd.enable_attach(address=('0.0.0.0', 3000))
 
 # Create a Flask WSGI application
 app_flask = Flask(__name__)
@@ -16,6 +26,7 @@ api = Api(app_flask,
           default='Test: uServices SW Eng',
           default_label='This is the swagger UI for API testing')
 
+
 # Items
 api.add_resource(ItemList, '/api/items')
 api.add_resource(Item, '/api/item<data>')
@@ -23,11 +34,21 @@ api.add_resource(Item, '/api/item<data>')
 api.add_resource(UsuarioList, '/api/usuarios')
 api.add_resource(Usuario, '/api/usuario<data>')
 
+item_fields = {
+    'nome': fields.String,
+    'sobrenome': fields.String,
+    'email': fields.String,
+    'celular': fields.Integer,
+    'data_inicio': fields.DateTime,
+    'data_final': fields.DateTime,
+    'last_update': fields.DateTime
+}
+post_parser = reqparse.RequestParser()
+
 
 @app_flask.route('/home')
 def index():
     print("working with methods on Usuarios object")
-
     return render_template('index.html')
 
 
@@ -55,7 +76,6 @@ def crud_usuario():
         user = Usuario()
         user.put(req_usuario)
 
-
     elif request.method == 'DELETE':
         req_usuario = request.get_json()
         print("DELETE", req_usuario['nome'])
@@ -74,18 +94,15 @@ def crud_item():
         item = Item()
         item.post(req_item)
 
-
     elif request.method == 'GET':
         req_item = request.get_json()
         item = Item()
         item.get(req_item['nome'])
 
-
     elif request.method == 'PUT':
         req_item = request.get_json()
         item = Item()
         item.put(req_item)
-
 
     elif request.method == 'DELETE':
         req_item = request.get_json()
@@ -106,14 +123,14 @@ def usuarios():
     print("getting all usuarios")
     return render_template('index.html')
 
-#
-# @app_flask.before_first_request
-# def create_collections():
-#     print("This function will run once")
-#     try:
-#         ConexionMongo.connect_first_time()
-#     except Exception as e:
-#         print(f"ERROR MONGO:  Cannot connect to mongo {e}")
+
+@app_flask.before_first_request
+def create_collections():
+    print("This function will run once")
+    try:
+        res_connexion = ConexionMongo.connect_first_time()
+    except Exception as e:
+        print(f"ERROR START:  Cannot connect to mongo {e}")
 
 
 if __name__ == '__main__':

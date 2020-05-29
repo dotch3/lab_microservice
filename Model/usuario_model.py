@@ -1,5 +1,5 @@
+import os
 from datetime import datetime
-
 from flask import make_response
 from Model.mongo_conexion import ConexionMongo
 from bson import ObjectId
@@ -8,7 +8,7 @@ from bson import ObjectId
 class UsuarioModel:
     TYPES_USERS = ("solicitante", "proprietario")
     collection = "usuarios"
-    db_inst = "local"
+    db_inst = os.environ['MONGODB_DATABASE']
 
     def __init__(self, user_id=None, nome=None, sobrenome=None, email=None, address=None, username=None, password=None,
                  celular=None, tipo_usuario=None):
@@ -105,7 +105,6 @@ class UsuarioModel:
                 if res_creation.acknowledged and ObjectId.is_valid(res_creation.inserted_id):
                     return make_response("Usuario {nome} criado com sucesso ".format(
                         nome=nome), 201)
-
 
             elif ObjectId.is_valid(data_found["_id"]):
                 print("The object exists")

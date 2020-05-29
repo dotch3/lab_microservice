@@ -1,0 +1,52 @@
+version: "3.4"
+services:
+  boa_vizinhanca:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: boa_vizinhanca_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    # env_file:
+    #   - ./env/app.env
+    environment:
+      MONGODB_USERNAME: adminbv
+      MONGODB_PASSWORD: boavizinhanca2020
+      MONGODB_DATABASE: admin
+      MONGODB_HOSTNAME: mongodb
+    networks:
+      - mongo-compose-network
+      - frontend
+    # links:
+    #   - mongodb
+  mongodb:
+    image: 20191405/mongo_boa_vizinhanca:v2.1
+    container_name: mongodb-boa-vizinhanca
+    restart: unless-stopped
+    # command: mongod --bind_ip_all
+    command: mongod --auth
+    ports:
+      - "27017-27019:27017-27019"
+    # env_file:
+    #   - ./env/mongo.env
+
+    volumes:
+      # - ./db/mongo-db-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./db/mongo-volume:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: boavizinhanca2020
+      MONGO_INITDB_DATABASE: admin
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /data/logs
+
+    networks:
+      - mongo-compose-network
+networks:
+  mongo-compose-network:
+    driver: bridge
+  frontend:
+    driver: bridge

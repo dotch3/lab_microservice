@@ -1,3 +1,6 @@
+import socket
+import os
+from datetime import datetime
 from pymongo import MongoClient, errors
 from bson.objectid import ObjectId
 from flask import Flask
@@ -5,6 +8,8 @@ from flask import jsonify, make_response, abort
 
 
 class ConexionMongo:
+    hostname = ""
+    host_ip = ""
 
     def __init__(self, client, service, collection):
         self.client = client
@@ -20,33 +25,44 @@ class ConexionMongo:
         will check the databases on the mongo server
         :return: bool Creation of collections succeeded
         """
-        print("Creating the database and collections")
-        mongo_client = MongoClient("mongodb://localhost:27017/")
-        db_names = mongo_client.list_database_names()
-        # use enumerate to iterate the database names list
-        for db in db_names:
-            if db == "local":
-                print("found")
-            print(db)
+        # mongo_client = MongoClient(hostname, 27017)
+        print(f"Creating the database and collections")
+        connected = False
+        try:
+            print("Try first time")
+            db_name = os.environ['MONGODB_DATABASE']
+            uri = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + \
+                os.environ['MONGODB_PASSWORD'] + '@' + os.environ['MONGODB_HOSTNAME'] + \
+                ':27017/' + os.environ['MONGODB_DATABASE']
 
-        local_db = mongo_client["local"]
-        usuarios = local_db["usuarios"]
-        items = local_db["items"]
-        print(type(usuarios))
-        print(type(items))
+            mongo_client = MongoClient(uri)
+            db_names = mongo_client.list_database_names()
+            print(db_names)
+            # Create database
+            # db_instance = mongo_client[db_name]
+            # Cretae the collections and inserting at least one record to have the collections
+            collection_usuarios = mongo_client["items"]
+            result_item = collection_usuarios.insert_one(
+                {"name": "Furadeira", "descricao": "Furadeira 110/220V", "data_inicio": str(datetime.now()),
+                 "data_final": "",
+                 "status": "Livre"})
+            print(result_item.inserted_id)
+            collection_items = mongo_client["usuarios"]
+            result_user = collection_items.insert_one(
+                {"name": "Joao", "sobrenome": "Silva", "email": "jsilva@test.com", "address": "Rua Ipiranga 110",
+                 "username": "jsilva", "password": "abc123", "celular": "1197332232",
+                 "last-update": str(datetime.now())})
+            print(result_user.inserted_id)
+            db_names = mongo_client.list_database_names()
+            print(db_names)
+            col = mongo_client[db_name].list_collection_names()
+            for c in col:
+                print(c)
+            if "admin" in db_names:
+                connected = True
 
-        collection_names = local_db.list_collection_names()
-        print(collection_names)
-        for col_num, col in enumerate(collection_names):
-            print(col, "--", col_num)
-            if "usuarios" in collection_names and "items" in collection_names:
-                print("Passed")
-
-        # get the total num of databases
-        print("total databases:", len(db_names))
-
-        host_info = mongo_client['HOST']
-        print("host:", host_info)
+        except Exception as e:
+            print(f"ERROR START:  Cannot connect to mongo {e}")
 
     @classmethod
     def create_conexion(cls, db_inst):
@@ -56,13 +72,19 @@ class ConexionMongo:
         :param f_time: bool The flag run the create_conexion and create database
         :return:  mongodb client conexion
         """
-        mongo_client = ""
-        if db_inst == "local":
-            print("local")
-            mongo_client = MongoClient("mongodb://localhost:27017/")  # Local
-        elif db_inst == "docker":
-            mongo_client = "other config-maybe"  # Docker
+        print("create_conexion")
+
+        uri = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + \
+            os.environ['MONGODB_PASSWORD'] + '@' + os.environ['MONGODB_HOSTNAME'] + \
+            ':27017/' + os.environ['MONGODB_DATABASE']
+
+        # mongo_client = PyMongo(app_flask)
+        mongo_client = MongoClient(uri)
         db_conn = mongo_client[db_inst]
+
+        # res_connexion = ConexionMongo.connect_first_time()
+        # print(res_connexion)
+
         return db_conn
 
     @classmethod
@@ -77,9 +99,10 @@ class ConexionMongo:
         # In order to jsonify the dictionary, is needed to call it inside the app_context
         app = Flask(__name__)
         if not db_inst:
-            db_inst = "local"
+            db_inst = "admin"
         with app.app_context():
-            ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst=db_inst, collection=collection, mode="get_all")
+            ITEMS = ConexionMongo.get_dict_from_mongodb(
+                db_inst=db_inst, collection=collection, mode="get_all")
             # Need code for handle exceptions of 0 data.
             my_dict = []
             for key in sorted(ITEMS.keys()):
@@ -109,7 +132,6 @@ class ConexionMongo:
         ITEMS = {}
         items_db = ""
         mongo_conn = ConexionMongo.create_conexion(db_inst=db_inst)
-        print("test")
         print(str(mongo_conn))
         if mode == "get_all":
             try:
@@ -150,14 +172,16 @@ class ConexionMongo:
                     print(type(items_db))
                     if "ObjectId" in str(type(items_db)):
                         if ObjectId.is_valid(items_db["_id"]):
-                            print("Encontrou o documento {}...enviando...".format(items_db["_id"]))
+                            print("Encontrou o documento {}...enviando...".format(
+                                items_db["_id"]))
                             return items_db
                     elif "dict" in str(type(items_db)):
                         print("dictionary")
                         print("dictionary " + str(items_db.get("_id")))
                         return items_db
                     else:
-                        print(f"Nao se encontra o documento com esse nome {nome}".format(nome=nome))
+                        print(
+                            f"Nao se encontra o documento com esse nome {nome}".format(nome=nome))
                         return False
 
                 elif _id:
@@ -167,7 +191,8 @@ class ConexionMongo:
                     query = {"_id": find_id}
                     # Return a dictionary
                     items_db = mongo_conn[collection].find_one(query)
-                    print("Encontrou o documento {}, enviando".format(items_db["_id"]))
+                    print("Encontrou o documento {}, enviando".format(
+                        items_db["_id"]))
                     if ObjectId.is_valid(items_db["_id"]):
                         print("The object is a BSON")
                         return items_db
@@ -283,7 +308,8 @@ class ConexionMongo:
         :return: the item if this is found
         """
         item = ""
-        ITEMS = ConexionMongo.get_dict_from_mongodb(db_inst, collection, mode="get_one")
+        ITEMS = ConexionMongo.get_dict_from_mongodb(
+            db_inst, collection, mode="get_one")
         if item_name in ITEMS:
             item = ITEMS.get(item_name)
         else:
