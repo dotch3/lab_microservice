@@ -4,6 +4,19 @@ LABEL MAINTAINER="Jorge M <jorge.mercado1405@gmail.com>"
 ADD . /code
 WORKDIR /code
 
+ENV MONGODB_DATABASE=admin
+ENV MONGODB_USERNAME=root
+ENV MONGODB_PASSWORD=boavizinhanca2020
+ENV MONGODB_HOSTNAME=mongodb
+
+# Database creds
+
+ENV MONGO_INITDB_ROOT_USERNAME=root
+ENV MONGO_INITDB_ROOT_PASSWORD=boavizinhanca2020
+ENV MONGO_INITDB_DATABASE=admin
+ENV MONGODB_DATA_DIR=/data/db
+ENV MONDODB_LOG_DIR=/data/logs
+
 
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt

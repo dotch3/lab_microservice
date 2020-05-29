@@ -38,6 +38,8 @@ class ConexionMongo:
             mongo_client = MongoClient(uri)
             db_names = mongo_client.list_database_names()
             print(db_names)
+            if not os.environ['MONGODB_DATABASE']:
+                db_name = "admin"
             # Create database
             db_instance = mongo_client[db_name]
             # Cretae the collections and inserting at least one record to have the collections

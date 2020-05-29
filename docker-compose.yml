@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.7"
 services:
   boa_vizinhanca:
     build:
@@ -10,13 +10,15 @@ services:
       - "5000:5000"
     depends_on:
       - mongodb
-    # env_file:
-    #   - ./env/app.env
+
     environment:
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: boavizinhanca2020
       MONGODB_DATABASE: admin
       MONGODB_HOSTNAME: mongodb
+    env_file:
+      - ./env/app.env
+
     networks:
       - mongo-compose-network
       - frontend
@@ -30,8 +32,8 @@ services:
     command: mongod --auth
     ports:
       - "27017-27019:27017-27019"
-    # env_file:
-    #   - ./env/mongo.env
+    env_file:
+      - ./env/mongo.env
 
     volumes:
       # - ./db/mongo-db-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
