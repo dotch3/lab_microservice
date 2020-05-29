@@ -22,9 +22,9 @@ app_flask = Flask(__name__)
 api = Api(app_flask,
           version="1.0",
           title="CRUD operations FIAP SW ENG Lab2",
-          description="Laboratory for microservices",
+          description="Laboratory for microservices. <data> is a json object",
           default='Test: uServices SW Eng',
-          default_label='This is the swagger UI for API testing')
+          default_label='This is the swagger UI for API testing - use /home for UI')
 
 
 # Items

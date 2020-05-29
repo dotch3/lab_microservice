@@ -39,17 +39,17 @@ class ConexionMongo:
             db_names = mongo_client.list_database_names()
             print(db_names)
             # Create database
-            # db_instance = mongo_client[db_name]
+            db_instance = mongo_client[db_name]
             # Cretae the collections and inserting at least one record to have the collections
-            collection_usuarios = mongo_client["items"]
+            collection_usuarios = db_instance["items"]
             result_item = collection_usuarios.insert_one(
-                {"name": "Furadeira", "descricao": "Furadeira 110/220V", "data_inicio": str(datetime.now()),
+                {"nome": "Furadeira", "descricao": "Furadeira 110/220V", "data_inicio": str(datetime.now()),
                  "data_final": "",
                  "status": "Livre"})
             print(result_item.inserted_id)
-            collection_items = mongo_client["usuarios"]
+            collection_items = db_instance["usuarios"]
             result_user = collection_items.insert_one(
-                {"name": "Joao", "sobrenome": "Silva", "email": "jsilva@test.com", "address": "Rua Ipiranga 110",
+                {"nome": "Joaocito", "sobrenome": "Silva", "email": "jsilva@test.com", "address": "Rua Ipiranga 110",
                  "username": "jsilva", "password": "abc123", "celular": "1197332232",
                  "last-update": str(datetime.now())})
             print(result_user.inserted_id)

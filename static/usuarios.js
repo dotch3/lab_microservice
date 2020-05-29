@@ -38,12 +38,12 @@ ns.model = (function() {
         data: JSON.stringify({
           nome: lname,
           sobrenome: lsobr,
+          celular: ltele,
           email: lemai,
           address: lende,
           tipo_usuario: ltipo,
           password: lpass,
           username: luser,
-          celular: ltele,
         }),
       };
 
