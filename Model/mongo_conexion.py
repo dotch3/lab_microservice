@@ -33,10 +33,11 @@ class ConexionMongo:
             db_name = os.environ['MONGODB_DATABASE']
             uri = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + \
                 os.environ['MONGODB_PASSWORD'] + '@' + os.environ['MONGODB_HOSTNAME'] + \
-                ':27017/' + os.environ['MONGODB_DATABASE']
+                ':27017/'
             if not os.environ['MONGODB_DATABASE']:
+                print("Environment variables not recognized")
                 db_name = "admin"
-                uri = 'mongodb://root:boavizinhanca2020@mongo:27017/admin'
+                uri = 'mongodb://root:boavizinhanca2020@mongo:27017/'
 
             mongo_client = MongoClient(uri)
             db_names = mongo_client.list_database_names()
@@ -80,16 +81,17 @@ class ConexionMongo:
 
         uri = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + \
             os.environ['MONGODB_PASSWORD'] + '@' + os.environ['MONGODB_HOSTNAME'] + \
-            ':27017/' + os.environ['MONGODB_DATABASE']
+            ':27017/'
 
         if not os.environ['MONGODB_DATABASE']:
+            print("Environment variables not recognized")
             db_name = "admin"
-            uri = 'mongodb://root:boavizinhanca2020@mongo:27017/admin'
+            uri = 'mongodb://root:boavizinhanca2020@mongo:27017/'
 
         # mongo_client = PyMongo(app_flask)
         mongo_client = MongoClient(uri)
-        db_instance = mongo_client[db_name]
-        db_conn = db_instance[db_inst]
+        # db_instance = mongo_client[db_name]
+        db_conn = mongo_client[db_inst]
 
         # res_connexion = ConexionMongo.connect_first_time()
         # print(res_connexion)
